@@ -153,6 +153,53 @@ body.show-site, html.show-site {
     background-size: 100% 100%;
 }
 
+/* LETTER INSIDE ENVELOPE */
+.letter {
+    position: absolute; bottom: 0; left: 15%; width: 70%; height: 70%; 
+    background: white; z-index: 2 !important; border: 1px solid var(--gold); 
+    display: flex; flex-direction: column; justify-content: center !important; 
+    align-items: center; text-align: center;
+    padding: 20px 20px 60px 20px; box-sizing: border-box;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    transform: translateY(0); opacity: 0; visibility: hidden;
+    transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+}
+
+.letter h2 {
+    font-family: 'Allison', cursive !important;
+    font-size: 3.2rem !important;
+    color: var(--accent);
+    font-weight: 400;
+    margin-top: 0 !important;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+.letter p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin: 10px 0 20px 0;
+}
+
+.letter button {
+    padding: 10px 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: 1px solid var(--accent);
+    transition: all 0.3s ease;
+}
+
+.open .letter {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(-50%); 
+}
+
 .bottom-flap {
     position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; 
     z-index: 6; background: url('6938.jpg') center/cover no-repeat;
@@ -219,6 +266,11 @@ body.show-site, html.show-site {
 @media screen and (max-width: 600px) {
     #envelope-label { bottom: 20% !important; font-size: 1.3rem; letter-spacing: 1px; }
     .envelope { width: 95vw; height: 70vw; }
+    .letter { bottom: 0; left: 15%; width: 70%; height: 70%; padding: 20px 20px 60px 20px; }
+    .letter h2 { font-size: 1.8rem !important; }
+    .letter p { font-size: 0.7rem; margin: 5px 0 10px 0; }
+    .letter button { padding: 6px 15px; font-size: 0.7rem; }
+    .open .letter { transform: translateY(-75%) !important; }
 }
 
 /* =========================================
@@ -641,12 +693,23 @@ body.show-site, html.show-site {
 </head>
 <body>
 
-<!-- ENVELOPE WRAPPER (NO POP-UP LETTER) -->
+<!-- ENVELOPE WRAPPER WITH LETTER INSIDE -->
 <div id="envelope-wrapper">
     <div class="envelope">
         <div class="envelope-glow"></div>
         <div class="envelope-back" style="background-image: url('6938.jpg');"></div>
-        
+
+        <div class="letter">
+            <div class="letter-content">
+                <h2 id="config-letter-initials" style="font-family: 'Allison'; color: var(--accent); margin: 0; font-size: 2.3rem;">M & J</h2>
+                <p style="font-family: 'Montserrat'; font-size: 0.8rem; margin: 10px 0;">Experience with music?</p>
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button type="button" onclick="handleMusic(true, event)" style="padding:8px 20px; background:var(--accent); color:white; border:none; cursor:pointer; font-family: 'Montserrat'; text-transform: uppercase;">YES</button>
+                    <button type="button" onclick="handleMusic(false, event)" style="padding:8px 20px; background:white; border:1px solid var(--accent); cursor:pointer; font-family: 'Montserrat'; text-transform: uppercase; color:var(--accent);">NO</button>
+                </div>
+            </div>
+        </div>
+
         <div class="internal-shadow"></div> 
 
         <div class="flap-container">
@@ -675,7 +738,7 @@ body.show-site, html.show-site {
     </svg>
 </button>
 
-<div id="main-site">
+<div id="main-site" style="display:none;">
 
     <!-- HERO SECTION -->
     <section id="landing-hero" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5svh;">
@@ -1217,6 +1280,7 @@ body.show-site, html.show-site {
     const applyClassText = (cls, text) => { document.querySelectorAll('.' + cls).forEach(el => el.innerHTML = text); };
 
     document.addEventListener('DOMContentLoaded', () => {
+        applyText('config-letter-initials', `${CONFIG.bride.charAt(0)} & ${CONFIG.groom.charAt(0)}`);
         applyText('config-bride-1', CONFIG.bride); applyText('formal-bride', CONFIG.bride);
         applyText('config-groom-1', CONFIG.groom); applyText('formal-groom', CONFIG.groom);
         applyText('config-date-1', CONFIG.dateFull); applyText('formal-date', CONFIG.dateFull);
@@ -1311,6 +1375,40 @@ body.show-site, html.show-site {
     }
 
     let guestData = null;
+
+    function handleMusic(play, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+
+        const mBtn = document.getElementById('musicBtn');
+        const audio = document.getElementById('bg-music');
+
+        if (mBtn) {
+            mBtn.style.display = 'flex'; 
+            if (play) {
+                if (audio) {
+                    audio.currentTime = 4;
+                    audio.play().catch(e => console.log("Audio blocked"));
+                }
+                mBtn.classList.add('playing'); 
+            } else {
+                if (audio) audio.pause();
+                mBtn.classList.remove('playing'); 
+            }
+        }
+
+        document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
+        
+        setTimeout(() => {
+            document.getElementById('main-site').style.display = 'block';
+            document.body.classList.add('show-site');
+            document.documentElement.classList.add('show-site'); 
+            window.scrollTo(0, 0); 
+            
+            if (typeof setupMusicObserver === "function") {
+                setupMusicObserver(); 
+            }
+        }, 300);
+    }
 
     function findInvitation() {
         const nameInput = document.getElementById('search-name-input').value.trim();
@@ -1494,7 +1592,6 @@ body.show-site, html.show-site {
         });
         window.dispatchEvent(new Event('scroll'));
     }
-
 </script>
 </body>
 </html>
