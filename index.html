@@ -123,8 +123,10 @@ body.show-site, html.show-site {
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
+    backdrop-filter: blur(0px) !important;
+    -webkit-backdrop-filter: blur(0px) !important;
     transform: scale(1.05); 
-    transition: opacity 1.5s ease, visibility 1.5s, transform 1.5s ease !important;
+    transition: opacity 0.8s ease, visibility 0.8s, transform 0.8s ease, backdrop-filter 0.8s ease, -webkit-backdrop-filter 0.8s ease !important;
 }
 
 .envelope {
@@ -1243,7 +1245,17 @@ body.show-site, html.show-site {
         </div>
     </section>
 
+    <!-- FOOTER SECTION -->
+    <footer style="background-color: var(--accent); text-align: center; padding: 60px 20px; font-family: 'Montserrat', sans-serif;">
+        <h2 style="font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--gold); margin: 0 0 10px 0;">Mariel & Jasper</h2>
+        <p style="font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; margin: 0; color: #FDF8F5;">November 6, 2027</p>
+        <div style="width: 40px; height: 1px; background: var(--pink); margin: 20px auto 0 auto; opacity: 0.5;"></div>
+    </footer>
+
+    
 </div>
+
+
 
 <script>
     if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
