@@ -1,1219 +1,1558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M & J Wedding</title>
-    <link rel="preload" as="image" href="1.jpg" fetchpriority="high">
-    <link rel="preload" as="image" href="6938.jpg" fetchpriority="high">
-    <link rel="preload" as="image" href="seal.png" fetchpriority="high">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&family=Pinyon+Script&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap');
-        
-        :root { 
-            --paper: #fcfaf7; 
-            --gold: #E27D60; 
-            --text: #4a4a4a; 
-            --accent: #8B3A3A; 
-            --pink: #F8B195; 
-            --ecru: #FDF8F5;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C & N Wedding</title>
+<link rel="preload" as="image" href="1.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="6938.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="seal.png" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&family=Pinyon+Script&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap');
+.envelope-glow {
+position: absolute;
+top: 40%; left: 50%;
+width: 150px; height: 150px;
+/* A very soft, diffuse pure white */
+background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0) 80%);
+filter: blur(30px); /* Massive blur removes any harsh edges */
+transform: translate(-50%, -50%) scale(0);
+opacity: 0;
+z-index: 2; 
 
-        /* 1. DEFAULT STATE: Locked for the Envelope */
-        html {
-            overflow-x: hidden;
-            scrollbar-gutter: stable; 
-            overflow: hidden !important; 
-            height: 100vh !important;
-        }
+/* 1.5s makes it a slow, elegant wash instead of a flash */
+transition: transform 1.5s ease-in-out, opacity 1.5s ease;
+}
 
-        body { 
-            margin: 0; padding: 0; 
-            background-color: #FDF8F5; 
-            font-family: 'Montserrat', sans-serif; 
-            color: var(--text); 
-            overflow-x: hidden;
-            overflow: hidden !important; 
-            height: 100vh !important;
-        }
+.open .envelope-glow {
+opacity: 1;
+transform: translate(-50%, -50%) scale(12); 
+}
+@media screen and (max-width: 600px) {
+#envelope-label {
+bottom: 20% !important;
+font-size: 1.3rem;
+letter-spacing: 1px;
+}
 
-        /* 2. OPEN STATE: Unlocked for the Website */
-        body.show-site, html.show-site {
-            overflow: visible !important; 
-            overflow-x: hidden !important; 
-            height: auto !important;
-            min-height: 100vh;
-            overflow-y: auto !important; 
-        }
+}
 
-        #main-site {
-            width: 100%;
-            overflow-x: hidden !important;
-        }
-
-        #months, #days, #hours, #minutes, #seconds {
-            display: inline-block;
-            white-space: nowrap !important;
-            hyphens: none !important;
-            -webkit-hyphens: none !important;
-        }
-
-        /* Decorative Paper Texture */
-        .paper-texture {
-            background-color: #fcfaf7;
-            background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png"); 
-        }
-
-        /* The Scroll Reveal Animation */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 1.5s ease-out;
-        }
-        .reveal-on-scroll.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .reveal-text { opacity: 0; }
-        .show-site .reveal-text { animation: fadeInUp 1.5s ease-out forwards; }
-        .show-site .delay-1 { animation-delay: 0.1s; } 
-        .show-site .delay-2 { animation-delay: 0.3s; } 
-        .show-site .delay-3 { animation-delay: 0.5s; } 
-
-        /* =========================================
-           ENVELOPE GLOW & ANIMATION 
+/* =========================================
+           ENTOURAGE NAME FADE-IN ANIMATION
            ========================================= */
-        .envelope-glow {
-            position: absolute;
-            top: 40%; left: 50%;
-            width: 150px; height: 150px;
-            background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0) 80%);
-            filter: blur(30px); 
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
-            z-index: 2; 
-            transition: transform 1.5s ease-in-out, opacity 1.5s ease;
+        @keyframes fadeInName {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .open .envelope-glow {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(12); 
-        }
-
-        #envelope-wrapper {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999 !important; 
-            background-color: rgba(253, 248, 245, 0.5); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: opacity 0.8s ease, visibility 0.8s;
-        }
-
-        #envelope-wrapper.wrapper-exit {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            transform: scale(1.05); 
-            transition: opacity 1.5s ease, visibility 1.5s, transform 1.5s ease !important;
-        }
-
-        .envelope {
-            position: relative; width: 90vw; height: 60vw;
-            max-width: 600px; max-height: 400px;
-            z-index: 10 !important; perspective: 1500px; 
-        }
-
-        .envelope-back {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('6938.jpg') center/cover no-repeat;
-            z-index: 1 !important; filter: brightness(0.9);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        .envelope-pocket-main { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 3 !important; background: url('6938.jpg') center/cover no-repeat;
-            clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
-        }
-
-        .envelope-lines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 4 !important; pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E");
-            background-size: 100% 100%;
-        }
-
-        .bottom-flap {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; 
-            z-index: 6; background: url('6938.jpg') center/cover no-repeat;
-            clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0);
-            filter: brightness(0.98);
-        }
-
-        .bottom-flap-lines {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; 
-            z-index: 7; pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E");
-            background-size: 100% 100%;
-        }
-
-        .flap-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 60%;
-            z-index: 10 !important; transform-origin: top; transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
-            animation: flap-bob 4s ease-in-out infinite;
-            filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
-        }
-
-        .open .flap-container { 
-            animation: none !important; 
-            transform: rotateX(160deg); 
-            z-index: 1 !important; 
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.5s;
-        }
-
-        .top-flap {
-            width: 100%; height: 100%;
-            background: url('6938.jpg') center/cover no-repeat;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-        }
-
-        #seal { position: relative; transform: translate(-50%, -50%); width: 100%; cursor: pointer;}
-        #seal img { width: 100%; display: block; }
-        .seal-bob-wrapper { 
-            position: absolute; top: 100%; left: 50%; width: 18%; min-width: 65px; 
-            z-index: 100 !important; 
-        }
-        .open .seal-bob-wrapper { z-index: -1 !important; transition: z-index 0s 0.4s !important; }
-
-        @keyframes flap-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }    
-        @keyframes seal-bob { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -53%); } } 
-        @keyframes elegantPulse { 0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.4; } 50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; } }
-
-        #envelope-label {
-            position: absolute;
-            bottom: 15% !important; 
-            left: 0; width: 100%;
-            text-align: center;
-            z-index: 100 !important; 
-            font-family: 'Playfair Display', serif; 
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            font-style: italic; 
-            letter-spacing: 2px; 
-            color: var(--accent); 
-            opacity: .9; 
-            pointer-events: none;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8); 
-        }
-
-        @media screen and (max-width: 600px) {
-            #envelope-label { bottom: 20% !important; font-size: 1.3rem; letter-spacing: 1px; }
-            .envelope { width: 95vw; height: 70vw; }
-        }
-
-        /* =========================================
-           MUSIC BUTTON 
+/* =========================================
+           MASSIVE SECTION CORNER FLOWERS
            ========================================= */
-        #musicBtn {
-            position: fixed !important; bottom: 25px !important; right: 25px !important;
-            z-index: 9999 !important; width: 50px !important; height: 50px !important;
-            border-radius: 50% !important; border: 1.5px solid var(--gold) !important;
-            cursor: pointer !important; display: none; align-items: center !important;
-            justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease, background-color 0.4s ease !important;
-            background-color: var(--pink) !important; 
-        }
-        #musicBtn svg path { fill: var(--accent) !important; transition: fill 0.4s ease !important; }
-        #musicBtn.playing { background-color: var(--accent) !important; }
-        #musicBtn.playing svg path { fill: var(--gold) !important; }
-        #musicBtn.playing svg { animation: icon-pulse 1.2s infinite ease-in-out !important; transform-origin: center; }
-
-        @keyframes icon-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.35); } 100% { transform: scale(1); } }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-3px);} }
-
-        /* =========================================
-           MASSIVE SECTION CORNER FLOWERS & BORDERS
-           ========================================= */
+/* 1. The Top Flower (Repeating & NO Stretching) */
         .top-border-flower {
-            position: absolute; top: 0; left: 0; width: 100%; height: 200px; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px; /* Increased a bit so it doesn't accidentally clip the flower */
+            
             background-image: url('topnbottom.png');
             background-repeat: repeat-x; 
+            
+            /* MAGIC FIX: Locks the width of each flower stamp so it NEVER stretches! */
+            /* Change '450px' to make the pattern smaller or larger */
             background-size: 550px auto; 
             background-position: bottom; 
-            z-index: 0; pointer-events: none;
-            opacity: 0.85; transform: scaleY(-1); 
+            
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.85;
+            transform: scaleY(-1); /* Flips it upside down */
         }
         .corner-flower {
-            position: absolute; width: 450px; height: auto;
-            z-index: 0; pointer-events: none; opacity: 0.85;
-        }
-        .corner-flower.bottom-left { bottom: 0; left: 0; transform: none; }
-        .corner-flower.bottom-right { bottom: 0; right: 0; transform: scaleX(-1); }
-        .corner-flower.top-left { top: 0; left: 0; transform: scaleY(-1); }
-        .corner-flower.top-right { top: 0; right: 0; transform: scale(-1); }
-        
-        @media screen and (max-width: 768px) {
-            .corner-flower { width: 250px; } 
-            #musicBtn { bottom: 85px !important; right: 20px !important; }
+            position: absolute;
+            width: 450px; /* MASSIVE desktop size! Change this number to go even bigger */
+            height: auto;
+            z-index: 0; /* Keeps them safely behind your text and cards */
+            pointer-events: none; 
+            opacity: 0.85;
         }
 
-        /* =========================================
-           FIXED ROAD & CAR HEIGHT 
+        /* 1. Bottom Left (Base Image) */
+        .corner-flower.bottom-left { 
+            bottom: 0; 
+            left: 0; 
+            transform: none; 
+        }
+        
+        /* 2. Bottom Right (Flipped horizontally) */
+        .corner-flower.bottom-right { 
+            bottom: 0; 
+            right: 0; 
+            transform: scaleX(-1); 
+        }
+        
+        /* 3. Top Left (Flipped vertically) */
+        .corner-flower.top-left { 
+            top: 0; 
+            left: 0; 
+            transform: scaleY(-1); 
+        }
+        
+        /* 4. Top Right (Flipped both ways) */
+        .corner-flower.top-right { 
+            top: 0; 
+            right: 0; 
+            transform: scale(-1); 
+        }
+
+        /* Mobile adjustments so they are huge but don't break the phone view */
+        @media screen and (max-width: 768px) {
+            .corner-flower { 
+                width: 250px; /* Massive size for phones! */
+            } 
+        }
+/* =========================================
+           FIXED ROAD & CAR HEIGHT
            ========================================= */
         .road-container {
-            position: relative; width: 80%; max-width: 600px; height: 100px; 
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            height: 100px; /* Much taller space for the PNG */
             margin: 0 auto 30px auto;
+            /* REMOVED overflow: hidden so your car NEVER gets clipped! */
         }
+
         .dotted-road {
-            position: absolute; bottom: 10px; width: 100%;
-            border-bottom: 2px dashed var(--gold); opacity: 0.6;
+            position: absolute;
+            bottom: 10px; /* Locks the road to the bottom of the container */
+            width: 100%;
+            border-bottom: 2px dashed #E27D60;
+            opacity: 0.6;
         }
+
         .car-wrapper {
-            position: absolute; bottom: 8px; left: 0;
+            position: absolute;
+            bottom: 8px; /* Drops the car wheels perfectly onto the road */
+            left: 0;
             animation: driveSlow 22s linear infinite; 
         }
+
+/* PNG Car Icon & Driving Vibration/Bounce */
         .car-icon {
-            width: 50px; height: auto; display: block;
+            width: 50px;
+            height: auto;
+            display: block;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
         }
-        .car-bounce { animation: carBob 0.5s ease-in-out infinite alternate; }
 
-        @keyframes carBob {
-            0% { transform: scaleX(-1) translateY(0); }
-            100% { transform: scaleX(-1) translateY(-3px); }
+        /* Continuous gentle road bounce */
+        .car-bounce {
+            animation: carBob 0.5s ease-in-out infinite alternate;
         }
-        @keyframes driveSlow {
-            0% { left: 0%; opacity: 0; }
-            3% { opacity: 1; }
-            88% { left: 90%; opacity: 1; }
-            92% { left: 95%; opacity: 0; }
-            99% { left: 95%; opacity: 0; }
-            100% { left: 0%; opacity: 0; }
-        }
+
+/* Continuous gentle road bounce + Horizontal mirror flip */
+@keyframes carBob {
+    0% {
+        transform: scaleX(-1) translateY(0);
+    }
+    100% {
+        transform: scaleX(-1) translateY(-3px); /* Bounces while facing right */
+    }
+}
+
         @media screen and (max-width: 768px) {
-            .road-container { width: 90%; margin-bottom: 20px; }
-            .car-icon { width: 38px; }
+            .car-icon {
+                width: 38px;
+            }
         }
 
-        /* =========================================
+/* Continuous One-Way Drive - Perfectly Aligned to the Road */
+        @keyframes driveSlow {
+            0% {
+                left: 0%; /* Starts exactly at the beginning of the road */
+                opacity: 0;
+            }
+            3% {
+                opacity: 1; /* Fades in very quickly */
+            }
+            88% {
+                left: 90%; 
+                opacity: 1; /* Stays fully visible until it reaches the end */
+            }
+            92% {
+                left: 95%; /* Stops driving right at the edge of the dotted line */
+                opacity: 0; /* Fades out very fast */
+            }
+            99% {
+                left: 95%;
+                opacity: 0; /* Stays hidden while waiting to reset */
+            }
+            100% {
+                left: 0%;
+                opacity: 0; /* Instantly teleports back to start */
+            }
+        }
+
+        /* Mobile adjustment */
+        @media screen and (max-width: 768px) {
+            .road-container {
+                width: 90%;
+                margin-bottom: 20px;
+            }
+            .car-icon {
+                width: 28px;
+                height: 28px;
+            }
+        }
+/* =========================================
            SLIDE-IN PAPER & TEXT OVERLAY
            ========================================= */
         .slide-from-left {
-            opacity: 0; transform: translateX(-40vw); 
+            opacity: 0;
+            transform: translateX(-40vw); 
             transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
+
         .reveal-on-scroll.is-visible .slide-from-left {
-            opacity: 1; transform: translateX(0);
+            opacity: 1;
+            transform: translateX(0);
         }
+
+        /* The Container (Now using Container Queries!) */
         .invitation-image-wrapper {
-            position: relative; display: inline-block; max-width: 600px; 
-            width: 100%; z-index: 5; margin: 0 auto;
+            position: relative;
+            display: inline-block;
+            max-width: 600px; 
+            width: 100%;
+            z-index: 5;
+            margin: 0 auto;
+            
+            /* THIS IS THE MAGIC TRICK: It tells the text inside to scale based on this box's width */
             container-type: inline-size; 
         }
+
         .paper-invite-img {
-            width: 100%; height: auto; display: block; border-radius: 4px;
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
         }
+
+        /* The Overlay Box */
         .invitation-text-overlay {
-            position: absolute; top: 40%; left: 17%; width: 70%; text-align: left;
-            pointer-events: none; 
+            position: absolute;
+            /* Adjust these percentages to move the whole text block up/down or left/right */
+            top: 40%;  
+            left: 17%; 
+            width: 70%;
+            text-align: left;
+            pointer-events: none; /* Prevents text from interfering if someone tries to save the image */
         }
+
+        /* Fluid Typography using 'cqi' (Container Query Inline) */
         .invite-name {
-            font-family: 'Cinzel', serif; font-size: 11cqi; font-weight: 400; margin: 0;
-            line-height: 1; letter-spacing: -0.02em;
+            font-family: 'Cinzel', serif; /* Elegant serif fallback */
+            font-size: 11cqi; /* Scales perfectly with the image */
+            font-weight: 400;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -0.02em;
         }
-        .name-gold { color: #D36A2D; /* Burnt Orange to match Code 1 */ }
-        .name-emerald { color: #94ACA1; /* Sage Green to match Code 1 */ }
-        .name-line { display: flex; align-items: center; gap: 2cqi; margin-bottom: 2cqi; }
+
+        .name-orange {
+            color: #D36A2D; /* Burnt Orange */
+        }
+
+/* 1. The Names Container */
+        .name-line {
+            display: flex;
+            align-items: center;
+            gap: 2cqi; 
+            
+            /* ADDED THIS: Controls the exact space directly beneath the names */
+            margin-bottom: 2cqi; 
+        }
+
+        .name-green {
+            color: #94ACA1; /* Sage Green */
+        }
+
         .invite-ampersand {
-            font-family: 'Great Vibes', cursive; font-size: 14cqi; color: var(--gold); margin-top: -3cqi; 
+            font-family: 'Great Vibes', cursive;
+            font-size: 14cqi;
+            color: #E28C41; /* Golden Orange */
+            margin-top: -3cqi; /* Nudges the '&' slightly higher */
         }
-        .invite-message {
-            font-family: 'Montserrat', sans-serif; font-size: 3.5cqi; color: #2C2C2C;
-            margin-top: 0; margin-bottom: 4cqi; line-height: 1.4; max-width: 50cqi; 
+
+.invite-message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5cqi;
+            color: #2C2C2C;
+            
+            /* CHANGED THIS: Removed the heavy top margin so it sits closer to the names */
+            margin-top: 0; 
+            margin-bottom: 4cqi; 
+            
+            line-height: 1.4;
+            max-width: 50cqi; 
         }
+
+/* 3. The Date */
         .invite-date {
-            font-family: 'Cinzel', serif; font-size: 4.5cqi; color: #94ACA1; /* Sage Green */
-            margin: 0 0 3cqi 0; line-height: 1.2;
+            font-family: 'Cinzel', serif;
+            
+            /* CHANGED THIS: Shrunk the date significantly (was 6cqi, now 4.5cqi) */
+            font-size: 4.5cqi; 
+            
+            color: #94ACA1;
+            margin: 0 0 3cqi 0;
+            line-height: 1.2;
         }
+
         .invite-venue {
-            font-family: 'Montserrat', sans-serif; font-size: 3.5cqi; color: #111111;
-            margin: 0; letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5cqi;
+            color: #111111;
+            margin: 0;
+            letter-spacing: 1px;
         }
-
-        /* --- BALANCED SPLIT TIMELINE --- */
-        #timeline { position: relative; overflow: hidden; padding: 100px 20px; background-color: var(--ecru); }
-        .timeline-container { max-width: 1000px; margin: 0 auto; position: relative; }
-        .timeline-container::before {
-            content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
-            width: 2px; background: var(--accent); transform: translateX(-50%);
-            opacity: 0.3; z-index: 0;
-        }
-        .timeline-row {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 60px; position: relative; z-index: 1;
-        }
-        .timeline-content-side, .timeline-image-side { width: 49%; position: relative; }
-        .timeline-image-side { display: flex; align-items: center; }
-        .timeline-image-side img { max-width: 180px; max-height: 180px; object-fit: contain; }
-        .center-dot {
-            position: absolute; left: 50%; top: 50%; width: 16px; height: 16px;
-            background: var(--gold); border: 4px solid var(--pink); border-radius: 50%;
-            transform: translate(-50%, -50%); box-shadow: 0 0 0 5px #fcfaf7; z-index: 10;
-        }
-        .event-time {
-            font-family: 'Montserrat', sans-serif; color: var(--gold); font-size: 13px; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block;
-        }
-        .timeline-content-side h3 {
-            font-family: 'Playfair Display', serif; color: var(--accent); font-size: 2.2rem;
-            margin: 0 0 10px 0; line-height: 1.1;
-        }
-        .timeline-content-side p {
-            font-family: 'Georgia', serif; font-size: 16px; color: #666; line-height: 1.5; font-style: italic; margin: 0;
-        }
-        .timeline-row.normal { flex-direction: row; }
-        .timeline-row.normal .timeline-content-side { text-align: right; padding-right: 30px; }
-        .timeline-row.normal .timeline-image-side { justify-content: flex-start; padding-left: 30px; }
-        .timeline-row.reverse { flex-direction: row-reverse; }
-        .timeline-row.reverse .timeline-content-side { text-align: left; padding-left: 30px; }
-        .timeline-row.reverse .timeline-image-side { justify-content: flex-end; padding-right: 30px; }
-
-        /* =========================================
-           ENTOURAGE & DRESS CODE & RSVP
+/* =========================================
+           SLIDE-IN FROM LEFT (PAPER ONLY)
            ========================================= */
-        #entourage p {
-            font-size: 16px !important; line-height: 1.8 !important; font-weight: 400;
-            margin-top: 5px !important; margin-bottom: 20px !important; padding: 0 15px; display: block;
-            letter-spacing: 0.5px; animation: fadeInName 0.8s ease forwards;
-        }
-        @keyframes fadeInName { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .attire-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 20px; text-align: center; margin-bottom: 50px; }
-        .colors-grid { display: flex; flex-wrap: nowrap; justify-content: center; gap: 30px; margin-bottom: 25px; width: 100%; }
-        .color-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-
-        @media screen and (max-width: 768px) {
-            .attire-grid { grid-template-columns: 1fr !important; gap: 50px !important; }
-            .colors-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 25px 15px !important; max-width: 300px; margin: 0 auto 25px auto; }
-            #landing-hero::before { transform: translateZ(0); }
+        .slide-from-left {
+            opacity: 0;
+            /* Starts off-screen to the left */
+            transform: translateX(-40vw); 
+            transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        #dress-code img { max-height: 250px !important; }
+        .reveal-on-scroll.is-visible .slide-from-left {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-        /* THE BULLETPROOF MOBILE HERO FIX */
-        #main-site section:first-of-type, #landing-hero {
-            height: 100svh !important; width: 100% !important; position: relative !important; 
-            overflow: hidden !important; clip-path: inset(0 0 0 0); background-color: var(--ecru); 
+        /* The container holding your paper image */
+        .invitation-image-wrapper {
+            position: relative;
+            display: inline-block;
+            max-width: 600px; 
+            width: 100%;
+            z-index: 5;
+            margin: 0 auto;
         }
-        #landing-hero::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('1.jpg') no-repeat center top / cover scroll !important; z-index: 0;
-        }
-        #main-site section:nth-of-type(2) { position: relative; z-index: 10; margin-top: 0; }
 
-        /* RSVP Form Styles */
-        .hidden { display: none !important; }
-        #rsvp { min-height: 500px; display: flex; align-items: center; justify-content: center; padding: 100px 20px; }
-        #rsvp-form-container, #rsvp-search-container { width: 100%; max-width: 500px; margin: 0 auto; }
-        
-        .rsvp-card {
-            background: rgba(255, 255, 255, 0.95); padding: 80px 40px 40px 40px; border: 1px solid var(--gold);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; display: flex;
-            flex-direction: column; min-height: 450px; justify-content: center; box-sizing: border-box;
-            position: relative; overflow: hidden; border-radius: 4px;
+        /* Your Paper Invite Image */
+        .paper-invite-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
         }
-        @media screen and (max-width: 600px) { .rsvp-card { min-height: 480px; padding: 70px 20px 30px 20px; } }
-        .rsvp-card h2 { font-family: 'Playfair Display', serif; color: var(--accent); font-size: 2.5rem; margin-bottom: 20px; }
-        .rsvp-card label { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; text-align: left; width: 100%; display: block; }
-        .rsvp-card input, .rsvp-card select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 1rem; background: #fcfaf7; color: var(--accent); box-sizing: border-box; }
-        .rsvp-card input:focus, .rsvp-card select:focus { outline: none; border-color: var(--gold); background: white; }
-        .rsvp-card button { background-color: var(--accent); color: white; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 2px; padding: 15px 30px; border: none; cursor: pointer; margin-top: 10px; transition: background 0.3s ease; border-radius: 3px; box-shadow: 0 4px 15px rgba(139, 58, 58, 0.2); }
-        .rsvp-card button:hover { background-color: var(--gold); }
-        
-        #gifting img { width: 100% !important; height: 100% !important; object-fit: contain !important; padding: 10px; }
-    </style>
+
+
+/* =========================================
+  MUSIC BUTTON SECTION STYLES
+  ========================================= */
+#musicBtn {
+position: fixed !important;
+bottom: 25px !important;
+right: 25px !important;
+z-index: 9999 !important;
+width: 50px !important;
+height: 50px !important;
+border-radius: 50% !important;
+border: 1.5px solid #E27D60 !important;
+cursor: pointer !important;
+display: none; /* JS makes this flex when opening */
+align-items: center !important;
+justify-content: center !important;
+box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+
+display: flex !important;
+
+/* Fades in on scroll */
+opacity: 0; 
+pointer-events: none;
+transition: opacity 0.5s ease, background-color 0.4s ease !important;
+
+/* Peach Background for Paused */
+background-color: #F8B195 !important; 
+}
+
+/* Rust Icon for Paused */
+#musicBtn svg path {
+fill: #8B3A3A !important; 
+transition: fill 0.4s ease !important;
+}
+
+/* --- PLAYING STATE (Rust Background, Coral Icon) --- */
+#musicBtn.playing {
+background-color: #8B3A3A !important; /* Rust Background */
+}
+
+#musicBtn.playing svg path {
+fill: #E27D60 !important; /* Coral Icon */
+}
+
+/* PULSING ANIMATION (Only the Icon) */
+#musicBtn.playing svg {
+animation: icon-pulse 1.2s infinite ease-in-out !important;
+transform-origin: center;
+}
+
+@keyframes icon-pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.35); }
+100% { transform: scale(1); }
+}
+
+
+/* Your existing scroll container fix */
+#scroll-container {
+bottom: 90px !important; 
+right: 25px !important;
+}
+/* 1. Attire Photos (Desktop: 2 Columns) */
+.attire-grid {
+display: grid;
+grid-template-columns: 1fr 1fr; 
+gap: 40px 20px;
+text-align: center;
+margin-bottom: 50px;
+}
+
+/* 2. Celebration Colors (Desktop: 1 Horizontal Row) */
+.colors-grid {
+display: flex;
+flex-wrap: nowrap; /* Forces them onto a single line */
+justify-content: center;
+gap: 30px;
+margin-bottom: 25px;
+width: 100%;
+}
+
+.color-item {
+display: flex;
+flex-direction: column; /* Puts the text neatly under the circle */
+align-items: center;
+gap: 8px;
+}
+
+/* --- MOBILE RESPONSIVENESS (Phones & Tablets) --- */
+@media screen and (max-width: 768px) {
+/* Stack attire photos into 1 column */
+.attire-grid {
+grid-template-columns: 1fr !important; 
+gap: 50px !important;
+}
+
+/* Neatly wrap colors into a 2x2 grid */
+.colors-grid {
+display: grid !important;
+grid-template-columns: 1fr 1fr !important; 
+gap: 25px 15px !important;
+max-width: 300px;
+margin: 0 auto 25px auto;
+}
+
+#landing-hero::before {
+transform: translateZ(0); /* Hardware acceleration to stop flicker */
+}
+}
+
+
+
+
+
+#dress-code img {
+max-height: 250px !important; /* Makes images slightly larger on mobile */
+}
+
+/* 2. Aligns the Celebration Color Palette */
+#dress-code div[style*="flex-wrap: wrap"] {
+display: grid !important;
+grid-template-columns: 1fr 1fr !important; /* Neatly aligns circles 2x2 */
+gap: 30px 10px !important;
+justify-items: center;
+max-width: 300px;
+margin: 0 auto;
+}
+
+/* 3. Centers the text under each color circle */
+#dress-code div[style*="display: flex; align-items: center; gap: 12px"] {
+flex-direction: column !important; /* Puts label under the circle */
+text-align: center;
+gap: 8px !important;
+}
+
+/* =========================================
+  ENTOURAGE SECTION STYLES
+  ========================================= */
+/* Fix for the Entourage names cutting off */
+#entourage p {
+font-size: 16px !important;
+/* Line-height creates the vertical "margin" between stacked names */
+line-height: 1.8 !important; 
+font-weight: 400;
+margin-top: 5px !important;
+margin-bottom: 20px !important; /* Space between the ROLE and the next role */
+padding: 0 15px;
+display: block;
+letter-spacing: 0.5px;
+animation: fadeInName 0.8s ease forwards;
+}
+
+
+/* Optional: Shrink the 'The Entourage' header slightly for mobile */
+#entourage h2 {
+font-size: 42px !important;
+}
+
+
+/* 1. DEFAULT STATE: Locked for the Envelope */
+html {
+overflow-x: hidden;
+scrollbar-gutter: stable; 
+
+    overflow: hidden !important; 
+    height: 100vh !important;
+}
+
+body { 
+margin: 0; padding: 0; 
+background-color: #FDF8F5; /* Solid color only - No image here! */
+font-family: 'Montserrat', sans-serif; 
+color: var(--text); 
+overflow-x: hidden;
+
+    overflow: hidden !important; 
+    height: 100vh !important;
+}
+
+/* 2. OPEN STATE: Unlocked for the Website */
+body.show-site, html.show-site {
+overflow: visible !important; /* Changed from auto to visible */
+overflow-x: hidden !important; 
+height: auto !important;
+min-height: 100vh;
+    overflow-y: auto !important; 
+}
+
+#main-site {
+width: 100%;
+overflow-x: hidden !important;
+}
+
+#months, #days, #hours, #minutes, #seconds {
+display: inline-block;
+white-space: nowrap !important;
+hyphens: none !important;
+-webkit-hyphens: none !important;
+}
+
+
+
+
+
+/* Decorative Paper Texture */
+.paper-texture {
+background-color: #fcfaf7;
+background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png"); /* Subtle paper grain */
+}
+
+/* The Scroll Reveal Animation */
+.reveal-on-scroll {
+opacity: 0;
+transform: translateY(30px);
+transition: all 1.5s ease-out;
+}
+
+/* This class will be added by JavaScript when the guest scrolls to it */
+.reveal-on-scroll.is-visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* The 'Soft Glide' Animation */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(15px); /* Shorter distance = feels faster */
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+/* Apply this to the text elements */
+.reveal-text {
+opacity: 0;
+}
+
+.show-site .reveal-text {
+animation: fadeInUp 1.5s ease-out forwards;
+}
+.show-site .delay-1 { animation-delay: 0.1s; } /* Names pop in almost immediately */
+.show-site .delay-2 { animation-delay: 0.3s; } /* Date follows quickly */
+.show-site .delay-3 { animation-delay: 0.5s; } /* Save the Date finishes it off */
+
+@font-face {
+font-family: 'Arielle';
+src: url('https://fonts.cdnfonts.com/s/16288/Arielle.woff');
+font-weight: normal;
+font-style: normal;
+}
+:root { 
+--paper: #fcfaf7; --gold: #E27D60; --text: #4a4a4a; --accent: #8B3A3A; --pink: #F8B195; 
+}
+
+
+#envelope-wrapper {
+position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+display: flex; justify-content: center; align-items: center;
+z-index: 9999 !important; 
+
+/* This makes it see-through and blurs the website behind it */
+background-color: rgba(253, 248, 245, 0.5); 
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+
+transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.envelope {
+position: relative; width: 90vw; height: 60vw;
+max-width: 600px; max-height: 400px;
+z-index: 10 !important; perspective: 1500px; 
+}
+
+/* 1. BACKING */
+.envelope-back {
+position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+background: url('6938.jpg') center/cover no-repeat;
+z-index: 1 !important; filter: brightness(0.9);
+box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.envelope-pocket-main { 
+position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+z-index: 3 !important; background: url('6938.jpg') center/cover no-repeat;
+clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+}
+
+.envelope-lines {
+position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+z-index: 4 !important; pointer-events: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E");
+background-size: 100% 100%;
+}
+
+/* This makes sure it physically leaves the screen */
+#envelope-wrapper.wrapper-exit {
+opacity: 0 !important;
+visibility: hidden !important;
+pointer-events: none !important;
+transform: scale(1.05); /* Less movement, more of a smooth fade */
+
+/* Matches the 1.5s light expansion for a perfect crossfade */
+transition: opacity 1.5s ease, visibility 1.5s, transform 1.5s ease !important;
+}
+
+
+/* --- THE BALANCED NARROW BOTTOM FLAP --- */
+.bottom-flap {
+position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; 
+z-index: 6; background: url('6938.jpg') center/cover no-repeat;
+clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0);
+filter: brightness(0.98);
+}
+
+.bottom-flap-lines {
+position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; 
+z-index: 7; pointer-events: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E");
+background-size: 100% 100%;
+}
+/* 7. TOP FLAP CONTAINER */
+.flap-container {
+position: absolute; top: 0; left: 0; width: 100%; height: 60%;
+z-index: 10 !important; transform-origin: top; transform-style: preserve-3d;
+transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+animation: flap-bob 4s ease-in-out infinite;
+filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
+}
+
+
+.open .flap-container { 
+animation: none !important; 
+transform: rotateX(160deg); /* 160deg is the magic number! */
+z-index: 1 !important; 
+/* The z-index waits 0.5s before dropping behind the letter so it doesn't clip */
+transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.5s;
+}
+
+.top-flap {
+width: 100%; height: 100%;
+background: url('6938.jpg') center/cover no-repeat;
+clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* 8. THE SEAL (Always on top) */
+#seal {
+position: relative;
+transform: translate(-50%, -50%);
+width: 100%;
+}
+/* Pushes the seal behind the flap paper as it opens */
+.open .seal-bob-wrapper {
+z-index: -1 !important;
+transition: z-index 0s 0.4s !important; 
+}
+#seal img { width: 100%; display: block; }    
+.seal-bob-wrapper { 
+position: absolute; 
+top: 100%; /* Centers it perfectly on the bottom edge of the flap */
+left: 50%; 
+width: 18%; 
+min-width: 65px; 
+z-index: 100 !important; 
+/* Removed the bobbing animation because the whole flap bobs now */
+cursor: pointer; 
+}
+
+/* Animations & Utilities */
+@keyframes flap-bob { 
+0%, 100% { 
+transform: translateY(0); 
+} 
+50% { 
+/* Reduced from -8px to -3px for a barely-there breath */
+transform: translateY(-3px); 
+} 
+}    
+@keyframes seal-bob { 0%, 100% { transform: translate(-50%, -50%); } 
+50% { transform: translate(-50%, -53%); } /* Very slight nudge */ } 
+@keyframes elegantPulse {
+0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.4; }
+50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; }
+}
+
+
+/* --- THE GUEST LABEL (On top of the pocket) --- */
+#envelope-label {
+position: absolute;
+/* Nudging it down to sit perfectly in the lower half of the pocket */
+bottom: 15% !important; 
+left: 0;
+width: 100%;
+text-align: center;
+z-index: 100 !important; 
+
+/* New High-End Font Styling */
+font-family: 'Playfair Display', serif; /* Elegant Serif Font */
+font-size: 1.2rem;          /* Larger for impact */
+font-weight: 700;          /* Bold enough to be seen */
+font-style: italic;        /* Italics add that 'Invitation' vibe */
+letter-spacing: 2px;       /* Tighter spacing for serifs looks better */
+color: #8B3A3A;            /* Matching your Rust theme */
+
+opacity: .9; 
+pointer-events: none;
+text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* Makes it pop against the paper */
+}
+
+/* Make sure this class is still working */
+#envelope-label.reveal-active {
+opacity: 1 !important;
+}
+/* 1. Make the envelope slightly taller on mobile to give more room */
+.envelope {
+width: 95vw;     /* Use almost full screen width */
+height: 70vw;    /* Make it taller (was 60vw) */
+}
+
+
+
+@keyframes bounce {
+0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+40% {transform: translateY(-5px);}
+60% {transform: translateY(-3px);}
+}
+
+
+/* Ensure the NEXT section starts exactly where the photo ends */
+#main-site section:nth-of-type(2) {
+position: relative;
+z-index: 10;
+margin-top: 0;
+}
+
+/* --- THE BULLETPROOF MOBILE HERO FIX --- */
+#main-site section:first-of-type,
+#landing-hero {
+height: 100svh !important; /* svh locks the height when Chrome bars move */
+width: 100% !important;
+position: relative !important; /* Anchors it to the page */
+overflow: hidden !important;
+clip-path: inset(0 0 0 0); /* The Guillotine that traps the image */
+background-color: #FDF8F5; /* Matches envelope fading */
+}
+
+/* This puts the photo BEHIND your text */
+#landing-hero::before {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+/* The word 'scroll' completely kills the iOS/Android jitter bug! */
+background: url('1.jpg') no-repeat center top / cover scroll !important;
+z-index: 0;
+}
+@keyframes fadeInImage {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+</style>
 </head>
 <body>
 
 <div id="envelope-wrapper">
-    <div class="envelope">
-        <div class="envelope-glow"></div>
-        <div class="envelope-back" style="background-image: url('6938.jpg');"></div>
+<div class="envelope">
+<div class="envelope-glow"></div>
+<div class="envelope-back" style="background-image: url('6938.jpg');"></div>
 
-        <div class="flap-container">
-            <div class="top-flap" style="background-image: url('6938.jpg');"></div> 
-            <div class="seal-bob-wrapper">
-                <div id="seal" onclick="openInvitation()">
-                    <img src="seal.png" alt="Seal">
-                </div>
-            </div>
-        </div>
+<div class="internal-shadow"></div> 
 
-        <div class="envelope-pocket-main" style="background-image: url('6938.jpg');"></div> 
-        <div class="envelope-lines"></div> 
-        <div class="bottom-flap" style="background-image: url('6938.jpg');"></div> 
-        <div class="bottom-flap-lines"></div> 
+<div class="flap-container">
+<div class="top-flap" style="background-image: url('6938.jpg');"></div> 
 
-        <div id="envelope-label">To our beloved Guest</div>
-    </div>
+<div class="seal-bob-wrapper">
+<div id="seal" onclick="openInvitation()">
+<img src="seal.png" alt="Seal">
+</div>
+</div>
 </div>
 
+<div class="envelope-pocket-main" style="background-image: url('6938.jpg');"></div> 
+<div class="envelope-lines"></div> 
+<div class="bottom-flap" style="background-image: url('6938.jpg');"></div> 
+<div class="bottom-flap-lines"></div> 
+
+<div id="envelope-label">To our beloved Guest</div>
+</div>
+</div>
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 
 <button id="musicBtn" onclick="toggleMusic()">
-    <svg viewBox="0 0 24 24" width="24" height="24">
-        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-    </svg>
+<svg viewBox="0 0 24 24" width="24" height="24">
+<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+</svg>
 </button>
 
 <div id="main-site">
 
-    <section id="landing-hero" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5svh;">
-        <div class="hero-content" style="position: relative; text-align: center; z-index: 2; max-width: 90vw;">
-            <h1 class="reveal-text delay-1" style="font-family: 'Great Vibes', cursive; font-size: clamp(50px, 8vw, 100px); color: var(--gold); margin: 0; line-height: 1.1; text-shadow: 2px 2px 12px rgba(0,0,0,0.6);">
-                <span id="config-bride-1">Mariel</span> 
-                <span style="font-family: 'Georgia', serif; font-size: 0.4em; letter-spacing: 5px; color: var(--pink); vertical-align: middle;">&</span> 
-                <span id="config-groom-1">Jasper</span>
-            </h1>
+<section id="landing-hero" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5svh;">
+<div class="hero-content" style="position: relative; text-align: center; z-index: 2; max-width: 90vw;">
+<h1 class="reveal-text delay-1" style="font-family: 'Great Vibes', cursive; font-size: clamp(50px, 8vw, 100px); color: #E27D60; margin: 0; line-height: 1.1; text-shadow: 2px 2px 12px rgba(0,0,0,0.6);">
+<span id="config-bride-1">Catherine</span> 
+<span style="font-family: 'Georgia', serif; font-size: 0.4em; letter-spacing: 5px; color: #F8B195; vertical-align: middle;">&</span> 
+<span id="config-groom-1">Nathan</span>
+</h1>
 
-            <div class="reveal-text delay-2" style="width: 80px; height: 1px; background: var(--gold); margin: 15px auto;"></div>
+<div class="reveal-text delay-2" style="width: 80px; height: 1px; background: #E27D60; margin: 15px auto;"></div>
 
-            <p id="config-date-1" class="reveal-text delay-2 ui-wedding-date" style="font-family: 'Georgia', serif; letter-spacing: 4px; font-size: 14px; text-transform: uppercase; color: #fff; margin: 5px 0;">
-                November 6, 2027
-            </p>
+<p id="config-date-1" class="reveal-text delay-2 ui-wedding-date" style="font-family: 'Georgia', serif; letter-spacing: 4px; font-size: 14px; text-transform: uppercase; color: #fff; margin: 5px 0;">
+November 26, 2027
+</p>
 
-            <p class="reveal-text delay-3" style="font-family: 'Georgia', serif; font-style: italic; color: var(--pink); font-size: 14px; margin: 0;">
-                Save the Date
-            </p>
-        </div>
+<p class="reveal-text delay-3" style="font-family: 'Georgia', serif; font-style: italic; color: #F8B195; font-size: 14px; margin: 0;">
+Save the Date
+</p>
 
-        <div style="position: absolute; bottom: 10dvh; right: 20px; text-align: right; z-index: 9999; color: var(--gold); text-transform: uppercase; font-family: 'Georgia', serif;">
-            <div style="font-size: 14px; letter-spacing: 3px; font-weight: bold; text-shadow: 2px 2px 3px rgba(0,0,0,1), -1px -1px 2px rgba(0,0,0,1);">
-                Scroll to RSVP <span style="display:block; font-size: 28px; margin-top: 2px; animation: bounce 2s infinite;">↓</span>
-            </div>
-        </div>
-    </section>
 
-    <section id="formal-invitation" class="reveal-on-scroll" style="padding: 120px 20px; background-color: var(--ecru); overflow: hidden; position: relative; text-align: center; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-        <div class="slide-from-left invitation-image-wrapper">
-            <img src="paperinvite.png" alt="Formal Invitation" class="paper-invite-img">
-            <div class="invitation-text-overlay">
-                <h2 id="formal-bride" class="invite-name name-gold">Mariel</h2>
-                <div class="name-line">
-                    <h2 id="formal-groom" class="invite-name name-emerald">Jasper</h2>
-                    <span class="invite-ampersand">&</span>
-                </div>
-                <p class="invite-message">With great joy, we invite<br>you to celebrate the<br>beginning of our<br>forever together on</p>
-                <p id="formal-date" class="invite-date">November 06, 2027</p>
-                <p id="formal-venue" class="invite-venue">Santuario de San Antonio Parish</p>
-            </div>
-        </div>
-    </section>
+</div>
 
-    <section id="celebration" style="padding: 50px 20px 100px 20px; background-color: #ffffff; text-align: center; overflow: hidden; position: relative;">
-        <!-- 🌸 TOP BORDER FLOWER 🌸 -->
-        <div class="top-border-flower"></div>
-        <!-- 🌸 CORNER FLOWERS 🌸 -->
-        <img src="flower.png" class="corner-flower bottom-left" alt="">
-        <img src="flower.png" class="corner-flower bottom-right" alt="">
+<div style="position: absolute; bottom: 10dvh; right: 20px; text-align: right; z-index: 9999; color: #E27D60; text-transform: uppercase; font-family: 'Georgia', serif;">
+<div style="font-size: 14px; letter-spacing: 3px; font-weight: bold; text-shadow: 2px 2px 3px rgba(0,0,0,1), -1px -1px 2px rgba(0,0,0,1);">
+Scroll to RSVP <span style="display:block; font-size: 28px; margin-top: 2px; animation: bounce 2s infinite;">↓</span>
+</div>
+</div>
+</section>
 
-        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto; position: relative; z-index: 10;">
-            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(65px, 8vw, 60px); color: var(--accent); margin-bottom: 40px;">The Celebration</h2>
+<!-- =========================================
+     FORMAL INVITATION (PAPER + TEXT OVERLAY)
+     ========================================= -->
+<section id="formal-invitation" class="reveal-on-scroll" style="padding: 120px 20px; background-color: #FDF8F5; overflow: hidden; position: relative; text-align: center; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+    
+    <!-- The paper wrapper -->
+    <div class="slide-from-left invitation-image-wrapper">
+        
+        <!-- The Blank Floral Background -->
+        <img src="paperinvite.png" alt="Formal Invitation" class="paper-invite-img">
+
+<!-- The Text Overlay -->
+        <div class="invitation-text-overlay">
+            <!-- ADDED id="formal-bride" -->
+            <h2 id="formal-bride" class="invite-name name-orange">Catherine</h2>
             
-            <!-- ANIMATED CAR -->
-            <div class="road-container">
-                <div class="dotted-road"></div>
-                <div class="car-wrapper">
-                    <img src="car.png" alt="Wedding Car" class="car-icon car-bounce">
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 80px 40px; align-items: stretch;">
-
-                <!-- Ceremony Box -->
-                <div style="position: relative; display: flex; flex-direction: column;">
-                    <div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: var(--accent); border: 1px solid var(--gold); border-radius: 2px; z-index: 0;"></div>
-                    <div style="background: #ffffff; border: 1px solid var(--gold); padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
-                        <img src="church1.jpg" alt="The Church" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid var(--pink);">
-                        <div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div>
-                                <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">The Ceremony</span>
-                                <div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
-                                    <h3 id="config-church-name" style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--accent); margin: 0; line-height: 1.2;">Santuario de San Antonio Parish</h3> 
-                                </div>
-                                <p id="config-church-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--accent); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">1:00 PM IN THE AFTERNOON</p>
-                                <p id="config-church-address" style="font-family: 'Georgia', serif; font-size: 15px; color: var(--accent); font-style: italic; margin-bottom: 25px;">3117 McKinley Rd, Forbes Park, Makati City</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reception Box -->
-                <div style="position: relative; display: flex; flex-direction: column;">
-                    <div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: var(--accent); border: 1px solid var(--gold); border-radius: 2px; z-index: 0;"></div>
-                    <div style="background: #ffffff; border: 1px solid var(--gold); padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
-                        <img src="bl.jpeg" alt="The Reception" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid var(--pink);">
-                        <div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div>
-                                <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">The Reception</span>
-                                <div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--accent); margin: 0; line-height: 1.2;">
-                                        <span id="config-reception-name">The Blue Leaf Mckinley</span><br>
-                                    </h3>
-                                </div>
-                                <p id="config-reception-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--accent); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">4:00 IN THE AFTERNOON</p>
-                                <p id="config-reception-address" style="font-family: 'Georgia', serif; font-size: 15px; color: var(--accent); font-style: italic; margin-bottom: 15px;">100 Park Avenue, McKinley Hill Village, Taguig</p>
-                                <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 25px;">Valet Parking Available</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- M&J TIMELINE -->
-    <section id="timeline">
-        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto; text-align: center;">
-            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--accent); margin-bottom: 60px;">The Wedding Timeline</h2>
-        </div>
-        <div class="timeline-container">
-            <div class="timeline-row normal reveal-on-scroll">
-                <div class="timeline-content-side">
-                    <span class="event-time" id="config-tl-time-1">01:00 PM</span>
-                    <h3>The Ceremony</h3>
-                    <p id="config-tl-desc-1">Santuario de San Antonio Parish<br>McKinley Rd, Makati</p>
-                </div>
-                <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="church.png" alt="Church"></div>
-            </div>
-            <div class="timeline-row reverse reveal-on-scroll">
-                <div class="timeline-content-side">
-                    <span class="event-time" id="config-tl-time-2">04:00 PM</span>
-                    <h3>Cocktail Hour</h3>
-                    <p id="config-tl-desc-2">The Blue Leaf Foyer<br>A time for toasts & conversations</p>
-                </div>
-                <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="cocktail.png" alt="Toast"></div>
-            </div>
-            <div class="timeline-row normal reveal-on-scroll">
-                <div class="timeline-content-side">
-                    <span class="event-time" id="config-tl-time-3">05:00 PM</span>
-                    <h3>Dinner & Reception</h3>
-                    <p id="config-tl-desc-3">The Blue Leaf Main Hall<br>Grand Entrance of the Couple</p>
-                </div>
-                <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="reception.png" alt="Dinner"></div>
-            </div>
-            <div class="timeline-row reverse reveal-on-scroll">
-                <div class="timeline-content-side">
-                    <span class="event-time" id="config-tl-time-4">07:00 PM</span>
-                    <h3>The After Party</h3>
-                    <p id="config-tl-desc-4">Dancing Under the Stars<br>Drinks & Late Night Snacks</p>
-                </div>
-                <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="party.png" alt="Music"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="dress-code" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: var(--accent); padding: 60px 20px;">
-        <div class="reveal-on-scroll" style="width: 100%; max-width: 650px; background: #ffffff; padding: 50px 40px; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5); border-radius: 4px; text-align: center;">
-
-            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 7vw, 65px); color: var(--accent); margin: 0 0 40px 0; line-height: 1;">Dress Code</h2>
-
-            <div class="attire-grid">
-                
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 15px 0;">Ninong</p>
-                    <div style="width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                        <img src="ninong.png" alt="Ninong" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    </div>
-                    <p style="font-family: 'Georgia', serif; font-size: 12px; color: #666; margin: 0 0 12px 0;">Barong Tagalog</p>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="width: 18px; height: 18px; background: var(--pink); border: 1px solid #eee; border-radius: 50%; box-sizing: border-box;"></div>
-                        <span style="font-family: 'Montserrat'; font-size: 8px; color: #888; font-weight: 700; letter-spacing: 1px;">PEACH / SUNSET</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 15px 0;">Ninang</p>
-                    <div style="width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                        <img src="ninang.png" alt="Ninang" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    </div>
-                    <p style="font-family: 'Georgia', serif; font-size: 12px; color: #666; margin: 0 0 12px 0;">Formal Attire, Gown or Long Gown</p>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <div style="width: 18px; height: 18px; background: var(--pink); border: 1px solid #eee; border-radius: 50%; box-sizing: border-box;"></div>
-                            <div style="width: 18px; height: 18px; background: #FAD6A5; border: 1px solid #eee; border-radius: 50%; box-sizing: border-box;"></div>
-                            <div style="width: 18px; height: 18px; background: var(--gold); border-radius: 50%; box-sizing: border-box;"></div>
-                        </div>
-                        <span style="font-family: 'Montserrat'; font-size: 8px; color: #888; font-weight: 700; letter-spacing: 1px;">PEACH / SUNSET / CORAL</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 15px 0;">Groomsmen</p>
-                    <div style="width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                        <img src="g.png" alt="Groomsmen" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    </div>
-                    <p style="font-family: 'Georgia', serif; font-size: 12px; color: #666; margin: 0 0 12px 0;">Barong Tagalog with Rust Inner Shirt</p>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <div style="width: 18px; height: 18px; background: #FAD6A5; border: 1px solid #eee; border-radius: 50%; box-sizing: border-box;"></div>
-                            <div style="width: 18px; height: 18px; background: var(--accent); border-radius: 50%; box-sizing: border-box;"></div>
-                        </div>
-                        <span style="font-family: 'Montserrat'; font-size: 8px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">SUNSET AND RUST</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 15px 0;">Bridesmaids</p>
-                    <div style="width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                        <img src="b.png" alt="Bridesmaids" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    </div>
-                    <p style="font-family: 'Georgia', serif; font-size: 12px; color: #666; margin: 0 0 12px 0;">Rust Long Gown</p>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="width: 18px; height: 18px; background: var(--accent); border-radius: 50%; box-sizing: border-box;"></div>
-                        <span style="font-family: 'Montserrat'; font-size: 8px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">RUST</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <div style="border-top: 1px solid #eee; padding-top: 35px;">
-                <p style="font-family: 'Montserrat', sans-serif; font-size: 17px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); font-weight: 900; margin-bottom: 25px;">Our Celebration Colors</p>
-
-                <div class="colors-grid">
-                    <div class="color-item">
-                        <div style="width: 45px; height: 45px; background: var(--accent); border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>
-                        <span style="font-size: 10px; font-family: 'Montserrat'; color: var(--accent); font-weight: 700; letter-spacing: 1.5px;">RUST</span>
-                    </div>
-                    
-                    <div class="color-item">
-                        <div style="width: 45px; height: 45px; background: var(--pink); border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>
-                        <span style="font-size: 10px; font-family: 'Montserrat'; color: #999; font-weight: 700; letter-spacing: 1.5px;">PEACH</span>
-                    </div>
-                    
-                    <div class="color-item">
-                        <div style="width: 45px; height: 45px; background: var(--gold); border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>
-                        <span style="font-size: 10px; font-family: 'Montserrat'; color: #999; font-weight: 700; letter-spacing: 1.5px;">CORAL</span>
-                    </div>
-                    
-                    <div class="color-item">
-                        <div style="width: 45px; height: 45px; background: #FAD6A5; border: 1px solid #eee; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>
-                        <span style="font-size: 10px; font-family: 'Montserrat'; color: #999; font-weight: 700; letter-spacing: 1.5px;">SUNSET</span>
-                    </div>
-                </div>
-
-                <p style="font-family: 'Georgia', serif; font-style: italic; font-size: 13px; color: #999; line-height: 1.6; max-width: 480px; margin: 0 auto;">
-                    We invite our guests to celebrate with us in these colors
-                </p>
+            <div class="name-line">
+                <!-- ADDED id="formal-groom" -->
+                <h2 id="formal-groom" class="invite-name name-green">Nathan</h2>
+                <span class="invite-ampersand">&</span>
             </div>
             
-        </div>
-    </section>
-
-    <section id="entourage" style="padding: 100px 15px; background-color: #FFF0EA; text-align: center;">
-        <div class="reveal-on-scroll paper-texture" style="background-color: #fcfaf7; max-width: 900px; margin: 0 auto; padding: 0; border-radius: 4px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); border: 1px solid var(--gold); overflow: hidden; position: relative;">
-
-            <img src="flower.png" alt="Floral Top" style="position: absolute; top: -4vw; left: 0; width: 100%; height: auto; display: block; transform: rotate(180deg) scale(1.05); z-index: 0; opacity: 0.2; pointer-events: none;">
+            <p class="invite-message">With great joy, we invite<br>you to celebrate the<br>beginning of our<br>forever together on</p>
             
-            <div style="padding: 160px 20px 140px 20px; position: relative; z-index: 2; word-wrap: break-word; overflow-wrap: break-word;">
-
-                <div style="margin-bottom: 60px;">
-                    <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(40px, 10vw, 65px); color: var(--gold); margin-bottom: 10px; line-height: 1.1;">The Entourage</h2>
-                    <div style="width: 50px; height: 1px; background: var(--gold); margin: 0 auto; opacity: 0.5;"></div>
-                </div>
-
-                <div style="margin-bottom: 60px;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <div>
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Parents of the Bride</span>
-                            <p id="Parents_Bride" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: var(--accent); line-height: 1.8; margin-top: 15px;"></p>
-                        </div>
-                        <div>
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Parents of the Groom</span>
-                            <p id="Parents_Groom" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: var(--accent); line-height: 1.8; margin-top: 15px;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 60px;">
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 700; display: block; margin-bottom: 25px;">Principal Sponsors</span>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <p id="Principal_Sponsors_Male" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); line-height: 2.0;"></p>
-                        <p id="Principal_Sponsors_Female" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); line-height: 2.0;"></p>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 60px;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <div>
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Maid of Honor</span>
-                            <p id="Maid_of_Honor" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: var(--accent); margin-top: 10px;"></p>
-                        </div>
-                        <div>
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Best Man</span>
-                            <p id="Best_Man" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: var(--accent); margin-top: 10px;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 60px;">
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 700; display: block; margin-bottom: 30px;">Secondary Sponsors</span>
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                        <div style="flex: 1 1 200px;"> <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 800;">To Light Our Path</span>
-                            <p id="Sponsors_Candle" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 5px;"></p>
-                        </div>
-                        <div style="flex: 1 1 200px;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 800;">To Clothe Us As One</span>
-                            <p id="Sponsors_Veil" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 5px;"></p>
-                        </div>
-                        <div style="flex: 1 1 200px;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 800;">To Bind Us Together</span>
-                            <p id="Sponsors_Cord" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 5px;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 60px;">
-                    <div>
-                        <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Bridesmaids</span>
-                        <p id="Bridesmaids" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); line-height: 2.0; margin-top: 15px;"></p>
-                    </div>
-                    <div>
-                        <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Groomsmen</span>
-                        <p id="Groomsmen" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); line-height: 2.0; margin-top: 15px;"></p>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 60px;">
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                        <div style="flex: 1 1 140px;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Ring Bearer</span>
-                            <p id="Ring_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 10px;"></p>
-                        </div>
-                        <div style="flex: 1 1 140px;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Coin Bearer</span>
-                            <p id="Coin_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 10px;"></p>
-                        </div>
-                        <div style="flex: 1 1 140px;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Bible Bearer</span>
-                            <p id="Bible_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); margin-top: 10px;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Flower Girls</span>
-                    <p id="Flower_Girls" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--accent); line-height: 2.0; margin-top: 15px;"></p>
-                </div>
-
-            </div> 
-            <img src="flower.png" alt="Floral Footer" style="position: absolute; bottom: -4vw; left: 0; width: 100%; height: auto; display: block; transform: scale(1.05); z-index: 0; opacity: 0.2; pointer-events: none;">
-        </div>
-    </section>
-
-    <section style="padding: 100px 20px; background-color: #ffffff; color: var(--accent); text-align: center;">
-        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto;">
-            <h2 style="font-family: 'Great Vibes', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--accent); margin-bottom: 50px;">The Journey to Forever</h2>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 60px;">
-                <div style="flex: 1; min-width: 300px;">
-                    <img src="2.jpg" style="width: 100%; border: 1px solid var(--gold); padding: 10px; background: #fff; box-shadow: 15px 15px 0px var(--accent);">
-                </div>
-                <div style="flex: 1; min-width: 300px; margin-top: 80px; transition-delay: 0.3s;">
-                    <img src="3.jpg" style="width: 100%; border: 1px solid var(--gold); padding: 10px; background: #fff; box-shadow: -15px 15px 0px var(--pink);">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section style="padding: 100px 0; background-color: var(--accent); text-align: center;">
-        <div class="reveal-on-scroll" style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
-            <h2 style="font-family: 'Great Vibes', cursive; font-size: 40px; color: var(--gold); margin-bottom: 30px;">Our Story in Motion</h2>
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid var(--gold);">
-                <iframe src="https://www.youtube.com/embed/8RjcJXikhrk?rel=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEARCH-BASED RSVP -->
-    <section id="rsvp" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 20px; background: url('1.jpg') center/cover no-repeat; text-align: center;">
-        <div class="reveal-on-scroll" style="width: 100%; max-width: 500px; margin: 0 auto;">
+            <!-- ADDED id="formal-date" -->
+            <p id="formal-date" class="invite-date">November 26, 2027</p>
             
-            <div id="rsvp-search-container" class="rsvp-card">
-                <img src="topnbottom.png" alt="Floral Top" style="position: absolute; top: -20px; left: 0; width: 100%; height: auto; transform: rotate(180deg) scale(1.05); pointer-events: none; z-index: 0;">
-                <div style="position: relative; z-index: 2;">
-                    <h2 style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 45px; letter-spacing: 8px; color: var(--accent); margin-bottom: 15px;">RSVP</h2>
-                    <p style="font-family: 'Montserrat'; font-size: 11px; margin-bottom: 20px; letter-spacing: 2px; color: #666; font-weight: bold;">ENTER YOUR FULL NAME TO FIND YOUR INVITATION</p>
-                    
-                    <input type="text" id="search-name-input" placeholder="Full Name" onkeydown="if(event.key === 'Enter') findInvitation()"
-                           style="width: 100%; padding: 12px; border: 1px solid var(--gold); border-radius: 4px; margin-bottom: 15px; text-align: center; font-family: 'Montserrat';">
-                    
-                    <button onclick="findInvitation()" id="search-btn">Find My Invitation</button>
-                    
-                    <p id="search-error" style="color: #c0392b; font-size: 12px; margin-top: 10px; display: none; font-family: 'Montserrat';">
-                        Name not found. Please check your spelling or contact the couple.
-                    </p>
-                </div>
-            </div>
-
-            <div id="rsvp-form-container" class="hidden"></div>
-
-            <div id="rsvp-success-container" class="hidden">
-                <div class="rsvp-card">
-                    <img src="topnbottom.png" alt="Floral Top" style="position: absolute; top: -20px; left: 0; width: 100%; height: auto; transform: rotate(180deg) scale(1.05); pointer-events: none; z-index: 0;">
-                    <div style="position: relative; z-index: 2;">
-                        <h2 style="font-size: 2.5rem; color: var(--accent);">Thank you!</h2>
-                        <p id="success-message" style="font-family: 'Montserrat'; margin-bottom: 20px; font-weight: bold;"></p>
-                        <div style="border-top: 1px solid #eee; padding-top: 20px;">
-                            <p style="font-size: 11px; color: #888; margin-bottom: 15px; font-weight: bold;">Need to RSVP for someone else?</p>
-                            <button onclick="resetRSVP()" style="background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 8px 15px; font-size: 10px; box-shadow: none;">Search for Another Guest</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+            <!-- ADDED id="formal-venue" -->
+            <p id="formal-venue" class="invite-venue">Manila Cathedral</p>
         </div>
-    </section>
 
-    <section id="gifting" style="padding: 80px 20px; text-align: center; background-color: #ffff;">
-        <div class="reveal-on-scroll" style="max-width: 1100px; margin: 0 auto;">
-            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--accent); margin-bottom: 20px;">Gifting</h2>
-            <div style="width: 50px; height: 1px; background: var(--gold); margin: 0 auto 40px auto;"></div>
-            
-            <p style="font-family: 'Georgia', serif; font-size: 16px; color: #4a4a4a; line-height: 1.8; font-style: italic; max-width: 600px; margin: 0 auto 60px auto;">
-                Your presence at our wedding is the greatest gift of all. However, should you wish to honor us with a gift, a contribution to our future home would be warmly appreciated.
-            </p>
+    </div>
+</section>
 
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                <div style="flex: 1; min-width: 280px; max-width: 320px;">
-                    <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                        <img src="gcash.png" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
-                    </div>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">GCash</span>
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--accent); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
-                </div>
+<section id="celebration" style="padding: 50px 20px 100px 20px; background-color: #ffffff; text-align: center; overflow: hidden; position: relative;">
+  <!-- 🌸 TOP BORDER FLOWER (Multiplying across the screen) 🌸 -->
+    <div class="top-border-flower"></div>
+    
+  
+    <!-- 🌸 MASSIVE BOTTOM CORNER FLOWERS 🌸 -->
+    <img src="flower.png" class="corner-flower bottom-left" alt="">
+    <img src="flower.png" class="corner-flower bottom-right" alt="">
 
-                <div style="flex: 1; min-width: 280px; max-width: 320px; transition-delay: 0.2s;">
-                    <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                        <img src="maya.jpg" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
-                    </div>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">Maya</span>
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--accent); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
-                </div>
+    <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto; position: relative; z-index: 10;">
+        <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(75px, 8vw, 60px); color: #8B3A3A; margin-bottom: 40px;">The Celebration</h2>
+<!-- =========================================
+     ANIMATED JOURNEY (SLOW SIDEWAYS CAR)
+     ========================================= -->
+<div class="road-container">
+    <div class="dotted-road"></div>
+<div class="car-wrapper">
+    <img src="car.png" alt="Wedding Car" class="car-icon car-bounce">
+</div>
+</div>
 
-                <div style="flex: 1; min-width: 280px; max-width: 320px; transition-delay: 0.4s;">
-                    <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                        <img src="maribank.png" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
-                    </div>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700;">MariBank</span>
-                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--accent); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 80px 40px; align-items: stretch;">
+
+<div style="position: relative; display: flex; flex-direction: column;">
+<div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: #8B3A3A; border: 1px solid #E27D60; border-radius: 2px; z-index: 0;"></div>
+
+<div style="background: #ffffff; border: 1px solid #E27D60; padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
+
+<img src="church1.jpg" alt="The Church" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid #F8B195;">
+
+<div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">The Ceremony</span>
+
+<div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
+<h3 id="config-church-name" style="font-family: 'Playfair Display', serif; font-size: 24px; color: #8B3A3A; margin: 0; line-height: 1.2;">Manila Cathedral</h3> 
+</div>
+
+<p id="config-church-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: #8B3A3A; letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">
+1:00 PM IN THE AFTERNOON
+</p>
+
+<p id="config-church-address" style="font-family: 'Georgia', serif; font-size: 15px; color: #8B3A3A; font-style: italic; margin-bottom: 25px;">
+Cabildo, 132 Beaterio St, Intramuros, Manila</p>
+</div>
+
+</div>
+</div>
+</div>
+
+<div style="position: relative; display: flex; flex-direction: column;">
+<div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: #8B3A3A; border: 1px solid #E27D60; border-radius: 2px; z-index: 0;"></div>
+
+<div style="background: #ffffff; border: 1px solid #E27D60; padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
+
+<img src="bl.jpg" alt="The Reception" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid #F8B195;">
+
+<div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">The Reception</span>
+
+<div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
+<h3 style="font-family: 'Playfair Display', serif; font-size: 24px; color: #8B3A3A; margin: 0; line-height: 1.2;">
+<span id="config-reception-name">Solaire Resort Quezon City</span><br>
+</h3>
+</div>
+
+<p id="config-reception-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: #8B3A3A; letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">
+4:00 IN THE AFTERNOON
+</p>
+
+<p id="config-reception-address" style="font-family: 'Georgia', serif; font-size: 15px; color: #8B3A3A; font-style: italic; margin-bottom: 15px;">
+Vertis North, 1 Solaire Way, Bagong Pag-asa, Quezon City, 1105 Metro Manila</p>
+
+<p style="font-family: 'Montserrat', sans-serif; font-size: 10px; color: #E27D60; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 25px;">
+Valet Parking Available
+</p>
+</div>
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+
+
+<section id="dress-code" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background-color: #8B3A3A; padding: 60px 20px;">
+
+<div class="reveal-on-scroll" style="width: 100%; max-width: 600px; background: #ffffff; padding: 70px 30px; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5); border-radius: 4px; text-align: center;">
+
+<h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 65px); color: #8B3A3A; margin: 0 0 40px 0; line-height: 1;">Dress Code</h2>
+
+<div style="margin-bottom: 60px;">
+<div style="margin-bottom: 35px;">
+<p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 4px; text-transform: uppercase; color: #8B3A3A; font-weight: 800; margin: 0 0 10px 0;">
+Formal Attire
+</p>
+<p style="font-family: 'Georgia', serif; font-size: 15px; color: #666; margin: 0; font-style: italic;">
+Standard for all guests
+</p>
+</div>
+
+<div style="width: 40px; height: 1px; background: #E27D60; margin: 0 auto 35px auto;"></div>
+
+<div style="margin-bottom: 20px;">
+<p style="font-family: 'Montserrat', sans-serif; font-size: 16px; letter-spacing: 4px; text-transform: uppercase; color: #8B3A3A; font-weight: 800; margin: 0 0 10px 0;">
+For Entourage
+</p>
+<p style="font-family: 'Georgia', serif; font-size: 15px; color: #666; margin: 0; font-style: italic;">
+Barong Tagalog & Long Gown
+</p>
+</div>
+</div>
+
+<div style="border-top: 1px solid #f0f0f0; padding-top: 45px;">
+<p style="font-family: 'Montserrat', sans-serif; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: #8B3A3A; font-weight: 900; margin-bottom: 30px;">Our Celebration Colors</p>
+
+<div style="display: flex; flex-wrap: nowrap; justify-content: center; gap: 20px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<div style="width: 50px; height: 50px; background: #8B3A3A; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+<span style="font-size: 9px; font-family: 'Montserrat', sans-serif; color: #8B3A3A; font-weight: 700; letter-spacing: 1px;">RUST</span>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<div style="width: 50px; height: 50px; background: #F8B195; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+<span style="font-size: 9px; font-family: 'Montserrat', sans-serif; color: #999; font-weight: 700; letter-spacing: 1px;">PEACH</span>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<div style="width: 50px; height: 50px; background: #E27D60; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+<span style="font-size: 9px; font-family: 'Montserrat', sans-serif; color: #999; font-weight: 700; letter-spacing: 1px;">CORAL</span>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<div style="width: 50px; height: 50px; background: #FAD6A5; border: 1px solid #eee; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+<span style="font-size: 9px; font-family: 'Montserrat', sans-serif; color: #999; font-weight: 700; letter-spacing: 1px;">SUNSET</span>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="entourage" style="padding: 100px 15px; background-color: #FFF0EA; text-align: center;">
+<div class="reveal-on-scroll paper-texture" style="background-color: #fcfaf7; max-width: 900px; margin: 0 auto; padding: 0; border-radius: 4px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); border: 1px solid #E27D60; overflow: hidden; position: relative;">
+
+<img src="flower.png" alt="Floral Top" style="position: absolute; top: -4vw; left: 0; width: 100%; height: auto; display: block; transform: rotate(180deg) scale(1.05); z-index: 0; opacity: 0.2; pointer-events: none;">
+<div style="padding: 160px 20px 140px 20px; position: relative; z-index: 2; word-wrap: break-word; overflow-wrap: break-word;">
+
+<div style="margin-bottom: 60px;">
+<h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(40px, 10vw, 65px); color: #E27D60; margin-bottom: 10px; line-height: 1.1;">The Entourage</h2>
+<div style="width: 50px; height: 1px; background: #E27D60; margin: 0 auto; opacity: 0.5;"></div>
+</div>
+
+<div style="margin-bottom: 60px;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Parents of the Bride</span>
+<p id="Parents_Bride" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: #8B3A3A; line-height: 1.8; margin-top: 15px;"></p>
+</div>
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Parents of the Groom</span>
+<p id="Parents_Groom" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: #8B3A3A; line-height: 1.8; margin-top: 15px;"></p>
+</div>
+</div>
+</div>
+
+<div style="margin-bottom: 60px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #E27D60; font-weight: 700; display: block; margin-bottom: 25px;">Principal Sponsors</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
+<p id="Principal_Sponsors_Male" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; line-height: 2.0;"></p>
+<p id="Principal_Sponsors_Female" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; line-height: 2.0;"></p>
+</div>
+</div>
+
+<div style="margin-bottom: 60px;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Maid of Honor</span>
+<p id="Maid_of_Honor" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: #8B3A3A; margin-top: 10px;"></p>
+</div>
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Best Man</span>
+<p id="Best_Man" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: #8B3A3A; margin-top: 10px;"></p>
+</div>
+</div>
+</div>
+
+<div style="margin-bottom: 60px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #E27D60; font-weight: 700; display: block; margin-bottom: 30px;">Secondary Sponsors</span>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+<div style="flex: 1 1 200px;"> <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #E27D60; font-weight: 800;">To Light Our Path</span>
+<p id="Sponsors_Candle" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 5px;"></p>
+</div>
+<div style="flex: 1 1 200px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #E27D60; font-weight: 800;">To Clothe Us As One</span>
+<p id="Sponsors_Veil" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 5px;"></p>
+</div>
+<div style="flex: 1 1 200px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #E27D60; font-weight: 800;">To Bind Us Together</span>
+<p id="Sponsors_Cord" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 5px;"></p>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 60px;">
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Bridesmaids</span>
+<p id="Bridesmaids" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; line-height: 2.0; margin-top: 15px;"></p>
+</div>
+<div>
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Groomsmen</span>
+<p id="Groomsmen" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; line-height: 2.0; margin-top: 15px;"></p>
+</div>
+</div>
+
+<div style="margin-bottom: 60px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+<div style="flex: 1 1 140px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Ring Bearer</span>
+<p id="Ring_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 10px;"></p>
+</div>
+<div style="flex: 1 1 140px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Coin Bearer</span>
+<p id="Coin_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 10px;"></p>
+</div>
+<div style="flex: 1 1 140px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Bible Bearer</span>
+<p id="Bible_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; margin-top: 10px;"></p>
+</div>
+</div>
+</div>
+
+<div style="margin-bottom: 20px;">
+<span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #E27D60; font-weight: 700;">Flower Girls</span>
+<p id="Flower_Girls" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: #8B3A3A; line-height: 2.0; margin-top: 15px;"></p>
+</div>
+
+</div> 
+<img src="flower.png" alt="Floral Footer" style="position: absolute; bottom: -4vw; left: 0; width: 100%; height: auto; display: block; transform: scale(1.05); z-index: 0; opacity: 0.2; pointer-events: none;"></div>
+</section>
+
+
+
+<section id="rsvp" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 20px; background: url('1.jpg') center/cover no-repeat; text-align: center;">
+
+<div class="reveal-on-scroll" style="width: 100%; max-width: 500px; margin: 0 auto; position: relative;">
+
+<div style="background: rgba(255, 255, 255, 0.95); padding: 90px 30px 60px 30px; border-radius: 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #E27D60; position: relative; overflow: hidden;">
+
+<img src="topnbottom.png" alt="Floral Top" style="position: absolute; top: -20px; left: 0; width: 100%; height: auto; transform: rotate(180deg) scale(1.05); pointer-events: none; z-index: 0;">
+
+<div style="position: relative; z-index: 2;">
+<h2 style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(35px, 8vw, 45px); letter-spacing: 8px; color: #8B3A3A; margin: 40px 0 15px 0;">RSVP</h2>
+
+<div style="width: 40px; height: 1.5px; background: #E27D60; margin: 0 auto 20px auto;"></div>
+
+<p style="font-family: 'Georgia', serif; font-size: 16px; color: #4a4a4a; font-style: italic; margin-bottom: 10px;">
+Kindly respond on or before
+</p>
+
+<p id="config-rsvp-deadline" style="font-family: 'Montserrat', sans-serif; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: #8B3A3A; font-weight: 800; margin-bottom: 40px;">
+October 1st, 2027
+</p>
+
+<a href="https://forms.gle/8StBu4FZQnwJ8APP8" target="_blank" style="display: inline-block; background-color: #8B3A3A; color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; padding: 16px 35px; text-decoration: none; border: 1px solid #8B3A3A; border-radius: 3px; box-shadow: 0 4px 15px rgba(139, 58, 58, 0.2);">
+Click Here to RSVP
+</a>
+</div>
+
+</div>
+</div>
+</section>
+
+
+
 
 
 <script>
-    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-    window.scrollTo(0, 0);
+// Add this to the very top of your script block
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+window.scrollTo(0, 0);
+/* =========================================================
+ TEMPLATE CONFIGURATION
+ Change names, dates, links, and text here. The script 
+ will automatically update your HTML when the page loads!
+ ========================================================= */
+const CONFIG = {
+// --- 1. Basic Details ---
+bride: "Catherine",
+groom: "Nathan",
+dateFull: "November 26, 2027",       // Example: November 6, 2027
+dateCaps: "NOVEMBER 26, 2027",      // Example: NOVEMBER 06, 2027
+year: "2027",
 
-    const CONFIG = {
-        bride: "Mariel",
-        groom: "Jasper",
-        dateFull: "November 6, 2027",
-        dateCaps: "NOVEMBER 06, 2027",
-        year: "2027",
-        timeCountdown: "2:00 PM",
-        timeText: "At Two O'Clock in the Afternoon",
-        churchName: "Santuario de San Antonio Parish",
-        churchAddress: "3117 McKinley Rd, Forbes Park, Makati City",
-        churchTime: "1:00 PM IN THE AFTERNOON",
-        churchMap: "https://www.google.com/maps/search/?api=1&query=Santuario+de+San+Antonio+Parish+Forbes+Park",
-        receptionName: "The Blue Leaf Mckinley",
-        receptionSub: "Banyan Pavillion",
-        receptionAddress: "100 Park Avenue, McKinley Hill Village, Taguig",
-        receptionTime: "4:00 IN THE AFTERNOON",
-        receptionMap: "https://www.google.com/maps/search/?api=1&query=The+Blue+Leaf+McKinley+Taguig",
-        tlTime1: "01:00 PM", tlDesc1: "Santuario de San Antonio Parish<br>McKinley Rd, Makati",
-        tlTime2: "04:00 PM", tlDesc2: "The Blue Leaf Foyer<br>A time for toasts & conversations",
-        tlTime3: "05:00 PM", tlDesc3: "The Blue Leaf Main Hall<br>Grand Entrance of the Couple",
-        tlTime4: "07:00 PM", tlDesc4: "Dancing Under the Stars<br>Drinks & Late Night Snacks",
-        rsvpDeadline: "October 1st, 2027",
-        hashtag: "#MarielGetsJasper",
-        coordName: "Coordinator Name",
-        coordNum: "0917 123 4567",
-        musicFile: "bgm.mp3",
-        webAppUrl: "https://script.google.com/macros/s/AKfycbwe3hvh8PIae668JqHeq3hfTHLhKq29AUNgeb45zlIDL0zzPpxPiv54BS6vi09nSBAR/exec"
-    };
 
-    const applyText = (id, text) => { const el = document.getElementById(id); if (el) el.innerHTML = text; };
-    const applyClassText = (cls, text) => { document.querySelectorAll('.' + cls).forEach(el => el.innerHTML = text); };
+// --- 2. Venues & Times ---
+timeCountdown: "2:00 PM",           // Used for the countdown timer logic
+timeText: "At Two O'Clock in the Afternoon",
 
-    document.addEventListener('DOMContentLoaded', () => {
-        applyText('config-bride-1', CONFIG.bride); applyText('formal-bride', CONFIG.bride);
-        applyText('config-groom-1', CONFIG.groom); applyText('formal-groom', CONFIG.groom);
-        applyText('config-date-1', CONFIG.dateFull); applyText('formal-date', CONFIG.dateFull);
-        applyText('formal-venue', CONFIG.churchName);
+churchName: "Manila Cathedral",
+churchAddress: "Cabildo, 132 Beaterio St, Intramuros, Manila",
+churchTime: "1:00 PM IN THE AFTERNOON",
+churchMap: "https://www.google.com/maps/search/?api=1&query=Manila+Cathedral+Intramuros",
 
-        applyText('config-church-name', CONFIG.churchName);
-        applyText('config-church-time', CONFIG.churchTime);
-        applyText('config-church-address', CONFIG.churchAddress);
-        applyText('config-reception-name', CONFIG.receptionName);
-        applyText('config-reception-time', CONFIG.receptionTime);
-        applyText('config-reception-address', CONFIG.receptionAddress);
+receptionName: "Solaire Resort Quezon City",
+receptionSub: "Vertis North",
+receptionAddress: "Vertis North, 1 Solaire Way, Bagong Pag-asa, Quezon City, 1105 Metro Manila",
+receptionTime: "4:00 IN THE AFTERNOON",
+receptionMap: "https://www.google.com/maps/search/?api=1&query=Solaire+Resort+Quezon+City",
 
-        applyText('config-tl-time-1', CONFIG.tlTime1); applyText('config-tl-desc-1', CONFIG.tlDesc1);
-        applyText('config-tl-time-2', CONFIG.tlTime2); applyText('config-tl-desc-2', CONFIG.tlDesc2);
-        applyText('config-tl-time-3', CONFIG.tlTime3); applyText('config-tl-desc-3', CONFIG.tlDesc3);
-        applyText('config-tl-time-4', CONFIG.tlTime4); applyText('config-tl-desc-4', CONFIG.tlDesc4);
 
-        applyClassText('config-couple-or', `${CONFIG.bride} or ${CONFIG.groom}`);
 
-        const msrc = document.getElementById('config-audio'); if(msrc) msrc.src = CONFIG.musicFile;
-        const audioEl = document.getElementById('bg-music'); if(audioEl) audioEl.load();
+// --- 4. Details & Tech ---
+rsvpDeadline: "October 1st, 2027",
+hashtag: "#CatherineGetsNathan",
+coordName: "Coordinator Name",
+coordNum: "0917 123 4567",
+musicFile: "bgm.mp3",
+webAppUrl: "https://script.google.com/macros/s/AKfycbyMfaiT9NkiUX31PqUgwOfhsOMcRcq654hZA2d0-3CgET0HLcCqwXJTuEyw8oeRwRUm/exec"
+};
 
-        const revealElements = document.querySelectorAll('.reveal-on-scroll, .slide-from-left');
-        if (typeof observer !== 'undefined') revealElements.forEach(el => observer.observe(el));
-        
-        loadEntourage();
-    });
+// =========================================================
+//  DO NOT EDIT BELOW THIS LINE (System Logic & Injectors)
+// =========================================================
 
-    function openInvitation() {
-        const wrapper = document.getElementById('envelope-wrapper');
-        const flap = document.querySelector('.flap-container');
-        const audio = document.getElementById('bg-music');
-        const mBtn = document.getElementById('musicBtn');
+// Safe text injector
+const applyText = (id, text) => { const el = document.getElementById(id); if (el) el.innerHTML = text; };
+const applyClassText = (cls, text) => { document.querySelectorAll('.' + cls).forEach(el => el.innerHTML = text); };
 
-        if (audio) {
-            audio.volume = 0; 
-            audio.play().catch(e => console.log("Music blocked by browser"));
-            let fadeAudio = setInterval(() => {
-                if (audio.volume < 0.9) { audio.volume += 0.1; } 
-                else { audio.volume = 1; clearInterval(fadeAudio); }
-            }, 200);
-            if (mBtn) mBtn.classList.add('playing');
-        }
+document.addEventListener('DOMContentLoaded', () => {
+// Inject Configuration
+applyText('config-letter-initials', `${CONFIG.bride.charAt(0)} & ${CONFIG.groom.charAt(0)}`);
+applyText('config-bride-1', CONFIG.bride); applyText('config-bride-2', CONFIG.bride);
+applyText('config-groom-1', CONFIG.groom); applyText('config-groom-2', CONFIG.groom);
+applyText('config-date-1', CONFIG.dateFull); applyText('config-date-2', CONFIG.dateCaps);
+applyText('config-time-1', CONFIG.timeText);
 
-        if (flap) {
-            flap.style.animation = 'none';
-            void flap.offsetWidth; 
-        }
-        document.getElementById('seal').style.pointerEvents = "none";
+// --- FORMAL INVITATION INJECTORS ---
+applyText('formal-bride', CONFIG.bride);
+applyText('formal-groom', CONFIG.groom);
+applyText('formal-date', CONFIG.dateFull);
+applyText('formal-venue', CONFIG.churchName);
 
-        wrapper.classList.add('open');
+applyText('config-church-name', CONFIG.churchName);
+applyText('config-church-time', CONFIG.churchTime);
+applyText('config-church-address', CONFIG.churchAddress);
+const cmap = document.getElementById('config-church-map'); if(cmap) cmap.href = CONFIG.churchMap;
 
-        setTimeout(() => {
-            wrapper.classList.add('wrapper-exit');
-            document.body.classList.add('show-site');
-            document.documentElement.classList.add('show-site'); 
-            window.scrollTo(0, 0); 
-            window.dispatchEvent(new Event('scroll'));
+applyText('config-reception-name', CONFIG.receptionName);
+applyText('config-reception-sub', CONFIG.receptionSub);
+applyText('config-reception-time', CONFIG.receptionTime);
+applyText('config-reception-address', CONFIG.receptionAddress);
+const rmap = document.getElementById('config-reception-map'); if(rmap) rmap.href = CONFIG.receptionMap;
 
-            if (typeof setupMusicObserver === "function") { setupMusicObserver(); }
-        }, 310); 
+applyClassText('ui-church-name-short', CONFIG.churchNameShort);
+applyText('config-tl-time-1', CONFIG.tlTime1); applyText('config-tl-desc-1', CONFIG.tlDesc1);
+applyText('config-tl-time-2', CONFIG.tlTime2); applyText('config-tl-desc-2', CONFIG.tlDesc2);
+applyText('config-tl-time-3', CONFIG.tlTime3); applyText('config-tl-desc-3', CONFIG.tlDesc3);
+applyText('config-tl-time-4', CONFIG.tlTime4); applyText('config-tl-desc-4', CONFIG.tlDesc4);
+
+applyText('config-rsvp-deadline', CONFIG.rsvpDeadline);
+applyClassText('config-hashtag-text', CONFIG.hashtag);
+applyClassText('config-couple-or', `${CONFIG.bride} or ${CONFIG.groom}`);
+
+applyText('config-coord-name', CONFIG.coordName);
+applyText('config-coord-num', CONFIG.coordNum);
+applyText('config-wedding-year', CONFIG.year);
+
+const msrc = document.getElementById('config-audio'); if(msrc) msrc.src = CONFIG.musicFile;
+const audioEl = document.getElementById('bg-music'); if(audioEl) audioEl.load();
+
+// Init Logic
+
+
+const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-slide-in');
+  if (typeof observer !== 'undefined') revealElements.forEach(el => observer.observe(el));
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('id');
+loadEntourage();
+});
+
+
+
+function openInvitation() {
+const wrapper = document.getElementById('envelope-wrapper');
+const flap = document.querySelector('.flap-container');
+const audio = document.getElementById('bg-music');
+const mBtn = document.getElementById('musicBtn');
+
+// 1. ELEGANT AUDIO FADE-IN
+if (audio) {
+audio.volume = 0; // Start at zero volume
+audio.play().catch(e => console.log("Music blocked by browser"));
+
+// Gradually increase volume every 200ms
+let fadeAudio = setInterval(() => {
+if (audio.volume < 0.9) {
+audio.volume += 0.1; 
+} else {
+audio.volume = 1;
+clearInterval(fadeAudio); // Stop the loop when at full volume
+}
+}, 200);
+
+if (mBtn) mBtn.classList.add('playing');
+}
+
+// 2. STOP ENVELOPE BOBBING
+if (flap) {
+flap.style.animation = 'none';
+void flap.offsetWidth; 
+}
+document.getElementById('seal').style.pointerEvents = "none";
+
+// 3. START THE OPENING ANIMATION
+wrapper.classList.add('open');
+
+// 4. EXIT TRANSITION
+setTimeout(() => {
+wrapper.classList.add('wrapper-exit');
+
+// Unlock site scrolling
+document.body.classList.add('show-site');
+document.documentElement.classList.add('show-site'); 
+
+window.scrollTo(0, 0); 
+window.dispatchEvent(new Event('scroll'));
+
+// Start the Music Button Scroll Tracker
+if (typeof setupMusicObserver === "function") {
+setupMusicObserver(); 
+}
+}, 310); 
+}
+
+
+
+
+
+// SHOW THE RSVP FORM
+function showMainForm() {
+document.getElementById('rsvp-search-container').classList.add('hidden');
+document.getElementById('rsvp-success-container').classList.add('hidden');
+
+const formContainer = document.getElementById('rsvp-form-container');
+formContainer.classList.remove('hidden');
+
+const hasPlusOne = guestData.maxSeats > 1;
+
+formContainer.innerHTML = `
+       <div class="rsvp-card">
+       <img src="flower.png" alt="Floral Top" style="position: absolute; top: -15px; left: 0; width: 100%; height: auto; transform: rotate(180deg) scale(1.05); pointer-events: none; z-index: 0;">
+           <h2 style="font-size: 2.5rem; color: var(--accent);">Hi ${guestData.fullName},</h2>
+           <label>Attendance</label>
+           <select id="attending-select" onchange="togglePlusOneFields(${hasPlusOne})">
+               <option value="YES">Joyfully Accept</option>
+               <option value="NO">Regretfully Decline</option>
+           </select>
+           
+           <div id="plus-one-area"></div>
+           
+           <button onclick="submitRSVP()" id="submit-btn" style="margin-top:20px;">Confirm RSVP</button>
+       </div>`;
+
+togglePlusOneFields(hasPlusOne);
+}
+
+
+
+
+
+const observerOptions = { threshold: 0.1 }; 
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+}, observerOptions);
+
+/* --- SPECIAL OBSERVER JUST FOR THE TALL ENTOURAGE SECTION --- */
+const earlyObserverOptions = { threshold: 0.02, rootMargin: "0px 0px 50px 0px" }; 
+const earlyObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+}, earlyObserverOptions);
+
+// Wait a tiny bit to ensure the main observer has finished setting up, then swap them
+setTimeout(() => {
+const entourageReveal = document.querySelector('#entourage .reveal-on-scroll');
+if (entourageReveal) {
+// Stop the normal observer from delaying it
+observer.unobserve(entourageReveal);
+// Attach the fast observer
+earlyObserver.observe(entourageReveal);
+}
+}, 500);
+
+function loadEntourage() {
+    // 1. Instantly load from memory if it exists!
+    const cachedData = localStorage.getItem('weddingEntourage');
+    if (cachedData) {
+        paintEntourage(JSON.parse(cachedData));
     }
 
-    let guestData = null;
+    // 2. Silently fetch from Google to get fresh updates
+    fetch(`${CONFIG.webAppUrl}?action=getEntourage`)
+    .then(res => res.json())
+    .then(data => {
+        // Save the fresh data to memory for next time
+        localStorage.setItem('weddingEntourage', JSON.stringify(data));
+        // Paint the fresh data to the screen
+        paintEntourage(data);
+    })
+    .catch(err => console.log("Google Script loading delayed: ", err));
+}
 
-    function findInvitation() {
-        const nameInput = document.getElementById('search-name-input').value.trim();
-        const btn = document.getElementById('search-btn');
-        const errorMsg = document.getElementById('search-error');
-
-        if (!nameInput) return;
-        btn.innerHTML = "Searching...";
-        btn.disabled = true;
-        errorMsg.style.display = 'none';
-
-        fetch(`${CONFIG.webAppUrl}?name=${encodeURIComponent(nameInput)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.found) {
-                    guestData = data;
-                    showMainForm();
-                } else {
-                    errorMsg.style.display = 'block';
-                    btn.innerHTML = "Find My Invitation";
-                    btn.disabled = false;
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                btn.innerHTML = "Find My Invitation";
-                btn.disabled = false;
-            });
-    }
-
-    function showMainForm() {
-        document.getElementById('rsvp-search-container').classList.add('hidden');
-        document.getElementById('rsvp-success-container').classList.add('hidden');
-        
-        const formContainer = document.getElementById('rsvp-form-container');
-        formContainer.classList.remove('hidden');
-
-        const hasPlusOne = guestData.maxSeats > 1;
-
-        formContainer.innerHTML = `
-            <div class="rsvp-card">
-                <img src="topnbottom.png" alt="Floral Top" style="position: absolute; top: -20px; left: 0; width: 100%; height: auto; transform: rotate(180deg) scale(1.05); pointer-events: none; z-index: 0;">
-                <div style="position: relative; z-index: 2;">
-                    <h2 style="font-size: 2.5rem; color: var(--accent);">Hi ${guestData.fullName},</h2>
-                    <label>Attendance</label>
-                    <select id="attending-select" onchange="togglePlusOneFields(${hasPlusOne})">
-                        <option value="YES">Joyfully Accept</option>
-                        <option value="NO">Regretfully Decline</option>
-                    </select>
-                    <div id="plus-one-area"></div>
-                    <button onclick="submitRSVP()" id="submit-btn" style="margin-top:20px;">Confirm RSVP</button>
-                </div>
-            </div>`;
-        
-        togglePlusOneFields(hasPlusOne);
-    }
-
-    function togglePlusOneFields(canHaveP1) {
-        const area = document.getElementById('plus-one-area');
-        const attending = document.getElementById('attending-select').value;
-        
-        if (attending === "YES" && canHaveP1) {
-            area.innerHTML = `
-                <label style="margin-top:15px;">Will you bring a Plus One?</label>
-                <select id="plus-one-choice">
-                    <option value="No">No, I'm coming alone</option>
-                    <option value="Yes">Yes, I'm bringing a guest</option>
-                </select>`;
-        } else {
-            area.innerHTML = '';
-        }
-    }
-
-    function submitRSVP() {
-        const btn = document.getElementById('submit-btn');
-        const attending = document.getElementById('attending-select').value;
-        const p1Field = document.getElementById('plus-one-choice');
-        const p1Choice = p1Field ? p1Field.value : "No";
-        
-        btn.innerHTML = "Saving..."; 
-        btn.disabled = true;
-
-        const formData = new URLSearchParams();
-        formData.append('guestName', guestData.fullName);
-        formData.append('attendance', attending);
-        formData.append('plusOneChoice', p1Choice);
-
-        fetch(CONFIG.webAppUrl, { 
-            method: "POST", 
-            body: formData 
-        })
-        .then(() => showDoneView(guestData.fullName))
-        .catch(err => {
-            console.error("Submission Error:", err);
-            btn.innerHTML = "Confirm RSVP";
-            btn.disabled = false;
-        });
-    }
-
-    function showDoneView(name) {
-        document.getElementById('rsvp-form-container').classList.add('hidden');
-        document.getElementById('rsvp-success-container').classList.remove('hidden');
-        document.getElementById('success-message').innerText = `Your RSVP has been recorded for ${name}.`;
-    }
-
-    function resetRSVP() {
-        document.getElementById('rsvp-success-container').classList.add('hidden');
-        document.getElementById('rsvp-search-container').classList.remove('hidden');
-        document.getElementById('search-name-input').value = "";
-        document.getElementById('search-btn').innerHTML = "Find My Invitation";
-        document.getElementById('search-btn').disabled = false;
-    }
-
-    function toggleMusic() {
-        const audio = document.getElementById("bg-music");
-        const mBtn = document.getElementById("musicBtn");
-        if (!audio || !mBtn) return;
-
-        if (audio.paused) { audio.play(); mBtn.classList.add('playing'); } 
-        else { audio.pause(); mBtn.classList.remove('playing'); }
-    }
-
-    function setupMusicObserver() {
-        var btn = document.getElementById("musicBtn");
-        var heroSection = document.querySelector('#main-site > section:first-of-type');
-        if (!btn || !heroSection) return;
-
-        var musicObs = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    btn.style.opacity = "1"; btn.style.pointerEvents = "auto";
-                } else {
-                    btn.style.opacity = "0"; btn.style.pointerEvents = "none";
-                }
-            });
-        }, { threshold: 0.1 }); 
-        musicObs.observe(heroSection);
-    }
-
-    const observerOptions = { threshold: 0.1 }; 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
-    }, observerOptions);
-
-    const earlyObserverOptions = { threshold: 0.02, rootMargin: "0px 0px 50px 0px" }; 
-    const earlyObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
-    }, earlyObserverOptions);
-
-    setTimeout(() => {
-        const entourageReveal = document.querySelector('#entourage .reveal-on-scroll');
-        if (entourageReveal) {
-            observer.unobserve(entourageReveal);
-            earlyObserver.observe(entourageReveal);
-        }
-    }, 500);
-
-    function loadEntourage() {
-        const cachedData = localStorage.getItem('weddingEntourage2');
-        if (cachedData) paintEntourage(JSON.parse(cachedData));
-
-        fetch(`${CONFIG.webAppUrl}?action=getEntourage`)
-            .then(res => res.json())
-            .then(data => {
-                localStorage.setItem('weddingEntourage2', JSON.stringify(data));
-                paintEntourage(data);
-            })
-            .catch(err => console.log("Google Script loading delayed: ", err));
-    }
-
-    function paintEntourage(data) {
-        Object.keys(data).forEach(roleID => {
-            const el = document.getElementById(roleID);
-            if (el) {
-                let text = data[roleID].trim();
-                if (text.includes(',')) { el.innerHTML = text.split(',').map(n => n.trim()).join('<br>'); } 
-                else if (text.includes('&')) { let names = text.split('&'); el.innerHTML = names[0].trim() + '<br>' + names[1].trim(); } 
-                else { el.innerHTML = text; }
-                el.style.opacity = "1";
+// The painter function that actually puts text on the screen
+function paintEntourage(data) {
+    Object.keys(data).forEach(roleID => {
+        const el = document.getElementById(roleID);
+        if (el) {
+            let text = data[roleID].trim();
+            if (text.includes(',')) { 
+                el.innerHTML = text.split(',').map(n => n.trim()).join('<br>'); 
+            } else if (text.includes('&')) { 
+                let names = text.split('&'); 
+                el.innerHTML = names[0].trim() + '<br>' + names[1].trim(); 
+            } else { 
+                el.innerHTML = text; 
             }
-        });
-        window.dispatchEvent(new Event('scroll'));
-    }
+            el.style.opacity = "1";
+        }
+    });
+    // Trigger scroll to fix animations
+    window.dispatchEvent(new Event('scroll'));
+}
+
+
+
+function handleMusic(play, event) {
+if (event) { event.preventDefault(); event.stopPropagation(); }
+
+const mBtn = document.getElementById('musicBtn');
+const audio = document.getElementById('bg-music');
+
+if (mBtn) {
+mBtn.style.display = 'flex'; 
+if (play) {
+if (audio) {
+audio.currentTime = 4;
+audio.play().catch(e => console.log("Audio blocked"));
+}
+mBtn.classList.add('playing'); 
+} else {
+if (audio) audio.pause();
+mBtn.classList.remove('playing'); 
+}
+}
+
+// Exit Envelope
+document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
+
+setTimeout(() => {
+document.getElementById('main-site').style.display = 'block';
+
+// UNLOCK SCROLLING
+document.body.classList.add('show-site');
+document.documentElement.classList.add('show-site'); // The missing key
+
+window.scrollTo(0, 0); // Force top
+
+if (typeof setupMusicObserver === "function") {
+setupMusicObserver(); 
+}
+}, 300);
+} 
+function toggleMusic() {
+const audio = document.getElementById("bg-music");
+const mBtn = document.getElementById("musicBtn");
+
+if (!audio || !mBtn) return;
+
+if (audio.paused) {
+audio.play();
+mBtn.classList.add('playing');
+} else {
+audio.pause();
+mBtn.classList.remove('playing');
+}
+}
+// The scroll tracker that fades the button in when you scroll past the photo
+function setupMusicObserver() {
+var btn = document.getElementById("musicBtn");
+
+// Using the exact target that worked perfectly for you last time
+var heroSection = document.querySelector('#main-site > section:first-of-type');
+
+if (!btn || !heroSection) return;
+
+var observer = new IntersectionObserver(function(entries) {
+entries.forEach(entry => {
+if (!entry.isIntersecting) {
+// You scrolled past the top photo -> Show the button
+btn.style.opacity = "1";
+btn.style.pointerEvents = "auto";
+} else {
+// You are at the top -> Hide the button so RSVP text is clear
+btn.style.opacity = "0";
+btn.style.pointerEvents = "none";
+}
+});
+}, { threshold: 0.1 }); 
+
+observer.observe(heroSection);
+}
+
 
 </script>
 </body>
