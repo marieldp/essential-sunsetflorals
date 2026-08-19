@@ -174,6 +174,7 @@ body.show-site, html.show-site {
     margin-bottom: 5px;
     line-height: 1;
 }
+
 .letter p {
     font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
@@ -699,6 +700,7 @@ body.show-site, html.show-site {
         <div class="envelope-glow"></div>
         <div class="envelope-back" style="background-image: url('6938.jpg');"></div>
 
+        <!-- THE POP-UP LETTER -->
         <div class="letter">
             <div class="letter-content">
                 <h2 id="config-letter-initials" style="font-family: 'Allison'; color: var(--accent); margin: 0; font-size: 2.3rem;">M & J</h2>
@@ -1339,43 +1341,21 @@ body.show-site, html.show-site {
         setDisplay("seconds", seconds);
     }
 
+    /* ONLY OPENS THE ENVELOPE AND SLIDES THE LETTER UP (NO AUTO-EXIT) */
     function openInvitation() {
-        const wrapper = document.getElementById('envelope-wrapper');
         const flap = document.querySelector('.flap-container');
-        const audio = document.getElementById('bg-music');
-        const mBtn = document.getElementById('musicBtn');
-
-        if (audio) {
-            audio.volume = 0; 
-            audio.play().catch(e => console.log("Music blocked by browser"));
-            let fadeAudio = setInterval(() => {
-                if (audio.volume < 0.9) { audio.volume += 0.1; } 
-                else { audio.volume = 1; clearInterval(fadeAudio); }
-            }, 200);
-            if (mBtn) mBtn.classList.add('playing');
-        }
-
         if (flap) {
             flap.style.animation = 'none';
             void flap.offsetWidth; 
         }
+        
         document.getElementById('seal').style.pointerEvents = "none";
-
-        wrapper.classList.add('open');
-
-        setTimeout(() => {
-            wrapper.classList.add('wrapper-exit');
-            document.body.classList.add('show-site');
-            document.documentElement.classList.add('show-site'); 
-            window.scrollTo(0, 0); 
-            window.dispatchEvent(new Event('scroll'));
-
-            if (typeof setupMusicObserver === "function") { setupMusicObserver(); }
-        }, 310); 
+        document.getElementById('envelope-wrapper').classList.add('open');
     }
 
     let guestData = null;
 
+    /* THIS EXITS THE ENVELOPE ONLY AFTER YOU CLICK YES/NO ON THE LETTER */
     function handleMusic(play, event) {
         if (event) { event.preventDefault(); event.stopPropagation(); }
 
@@ -1386,8 +1366,12 @@ body.show-site, html.show-site {
             mBtn.style.display = 'flex'; 
             if (play) {
                 if (audio) {
-                    audio.currentTime = 4;
+                    audio.volume = 0;
                     audio.play().catch(e => console.log("Audio blocked"));
+                    let fadeAudio = setInterval(() => {
+                        if (audio.volume < 0.9) { audio.volume += 0.1; } 
+                        else { audio.volume = 1; clearInterval(fadeAudio); }
+                    }, 200);
                 }
                 mBtn.classList.add('playing'); 
             } else {
@@ -1407,7 +1391,7 @@ body.show-site, html.show-site {
             if (typeof setupMusicObserver === "function") {
                 setupMusicObserver(); 
             }
-        }, 300);
+        }, 800);
     }
 
     function findInvitation() {
@@ -1592,6 +1576,7 @@ body.show-site, html.show-site {
         });
         window.dispatchEvent(new Event('scroll'));
     }
+
 </script>
 </body>
 </html>
